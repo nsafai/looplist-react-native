@@ -31,11 +31,13 @@ class SettingsScreen extends React.Component {
 
 // createBottomTabNavigator(RouteConfigs, BottomTabNavigatorConfig)
 const TabNavigator = createBottomTabNavigator(
-  { // Route Configs
+  // Route Configs
+  { 
     Home: HomeScreen,
     Settings: SettingsScreen,
   }, 
-  { // BottomTabNavigatorConfig
+  // BottomTabNavigatorConfig
+  { 
     defaultNavigationOptions: ({ navigation}) => ({
         tabBarIcon: ({ focused, horizontal, tintColor }) => {
             const { routeName } = navigation.state;
@@ -49,7 +51,13 @@ const TabNavigator = createBottomTabNavigator(
             }
             return <Ionicons name={iconName} size={25} color={tintColor} />
         }
-    })
+    }),
+    tabBarOptions: {
+      activeTintColor: '#df6f22',
+      inactiveTintColor: '#d3d7da',
+      activeBackgroundColor: '#d3d7da',
+      inactiveBackgroundColor: '#576574'
+    }
   }
 );
 
