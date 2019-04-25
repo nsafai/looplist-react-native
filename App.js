@@ -1,17 +1,28 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
-import { Ionicons } from 'react-native-vector-icons'
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { Ionicons } from 'react-native-vector-icons';
 
+class AboutScreen extends React.Component {
+  render() {
+
+    return (
+      <View style={styles.home}>
+        <Ionicons name="ios-journal" size={32} />
+        <Text>Read more about the company on this page.</Text>
+      </View>
+    );
+  }
+}
 
 class HomeScreen extends React.Component {
   render() {
 
     return (
       <View style={styles.home}>
-        <Text>Home!</Text>
         <Ionicons name="ios-home" size={32} />
-        {/* <Ionicons.Button name='ios-add-circle-outline' size={32} /> */}
+        <Text>Home!</Text>
+        <Button title="Read More About Us" onPress={() => {this.props.navigation.navigate('About')}} />
       </View>
     );
   }
@@ -22,18 +33,23 @@ class SettingsScreen extends React.Component {
 
     return (
       <View style={styles.settings}>
-        <Text>Settings!</Text>
         <Ionicons name="ios-settings" size={32} />
+        <Text>Settings!</Text>
       </View>
     );
   }
 }
 
+const HomeStack = createStackNavigator({
+  Home: { screen: HomeScreen },
+  About: { screen: AboutScreen }
+})
+
 // createBottomTabNavigator(RouteConfigs, BottomTabNavigatorConfig)
 const TabNavigator = createBottomTabNavigator(
   // Route Configs
   { 
-    Home: HomeScreen,
+    Home: HomeStack,
     Settings: SettingsScreen,
   }, 
   // BottomTabNavigatorConfig
