@@ -1,7 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import {
+  ActivityIndicator,
+  AsyncStorage,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Button
+} from 'react-native';
+import { 
+  createSwitchNavigator,
+  createStackNavigator, 
+  createBottomTabNavigator, 
+  createAppContainer 
+} from 'react-navigation';
 import { Ionicons } from 'react-native-vector-icons';
+import AuthLoadingScreen from './AuthLoadingScreen';
 
 class AboutScreen extends React.Component {
   render() {
@@ -14,70 +28,62 @@ class AboutScreen extends React.Component {
     );
   }
 }
+class SignInScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Please sign in',
+  };
+
+  render() {
+    return (
+      <View>
+        <Button title="Sign in!" onPress={this._signInAsync} />
+      </View>
+    );
+  }
+
+  _signInAsync = async () => {
+    await AsyncStorage.setItem('userToken', 'abc');
+    this.props.navigation.navigate('App');
+  };
+}
 
 class HomeScreen extends React.Component {
-  render() {
+  static navigationOptions = {
+    title: 'Welcome to the app!',
+  };
 
+  render() {
     return (
-      <View style={styles.home}>
-        <Ionicons name="ios-home" size={32} />
-        <Text>Home!</Text>
-        <Button title="Read More About Us" onPress={() => {this.props.navigation.navigate('About')}} />
+      <View>
+        <Button title="Show me more of the app" onPress={this._showMoreApp} />
+        <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
       </View>
     );
   }
+
+  _showMoreApp = () => {
+    this.props.navigation.navigate('Other');
+  };
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('Auth');
+  };
 }
 
-class SettingsScreen extends React.Component {
-  render() {
+const AppStack = createStackNavigator({ Home: HomeScreen, About: AboutScreen });
+const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
-    return (
-      <View style={styles.settings}>
-        <Ionicons name="ios-settings" size={32} />
-        <Text>Settings!</Text>
-      </View>
-    );
+export default createAppContainer(createSwitchNavigator(
+  {
+    AuthLoading: AuthLoadingScreen,
+    App: AppStack,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'AuthLoading',
   }
-}
-
-const HomeStack = createStackNavigator({
-  Home: { screen: HomeScreen },
-  About: { screen: AboutScreen }
-})
-
-// createBottomTabNavigator(RouteConfigs, BottomTabNavigatorConfig)
-const TabNavigator = createBottomTabNavigator(
-  // Route Configs
-  { 
-    Home: HomeStack,
-    Settings: SettingsScreen,
-  }, 
-  // BottomTabNavigatorConfig
-  { 
-    defaultNavigationOptions: ({ navigation}) => ({
-        tabBarIcon: ({ focused, horizontal, tintColor }) => {
-            const { routeName } = navigation.state;
-            let iconName;
-            switch(routeName) {
-              case 'Home': 
-                iconName = 'ios-home'
-                break
-              case 'Settings': 
-                iconName = 'ios-settings'
-            }
-            return <Ionicons name={iconName} size={25} color={tintColor} />
-        }
-    }),
-    tabBarOptions: {
-      activeTintColor: '#df6f22',
-      inactiveTintColor: '#d3d7da',
-      activeBackgroundColor: '#d3d7da',
-      inactiveBackgroundColor: '#576574'
-    }
-  }
-);
-
-export default createAppContainer(TabNavigator);
+));
 
 const styles = StyleSheet.create({
   home: { 
