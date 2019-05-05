@@ -30,7 +30,7 @@ class HomeScreen extends React.Component {
       .then(res => res.json())
       .then(json => {
         jsonLists = json.lists;
-        lists = jsonLists.map(list => list.title);
+        lists = jsonLists.map(list => { return { id:list._id, title: list.title, todos: list.todoItems } });
         this.setState({ lists });
       })
       .catch(err => console.log(err.message))
@@ -47,7 +47,7 @@ class HomeScreen extends React.Component {
           renderItem={({item}) => (
             <ListNameCell 
               onPress={() => navigate('Detail', item)} 
-              item={item} 
+              list={item} 
             />
           )}
           keyExtractor={(item, index) => `${index}-${item}`}

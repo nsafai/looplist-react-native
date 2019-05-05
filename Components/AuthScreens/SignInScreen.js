@@ -74,7 +74,6 @@ class SignInScreen extends React.Component {
     postData(url, { email, password })
       .then(res => res.json())
       .then(json => {
-        console.log(json)
         AsyncStorage.setItem('userToken', json.user);
         AsyncStorage.setItem('sessionExpires', json.expires)
         this.props.navigation.navigate('App');
