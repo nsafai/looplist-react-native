@@ -13,9 +13,14 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View>
-        <Button title="Sign in!" onPress={this._signInAsync} />
+        <Button title="Sign in" onPress={this._signInAsync} />
+        <Button title="Create an account" onPress={this.signUp} />
       </View>
     );
+  }
+
+  signUp = () => {
+    this.props.navigation.navigate('SignUp');
   }
 
   _signInAsync = async () => {
