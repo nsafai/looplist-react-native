@@ -13,7 +13,7 @@ import ListNameCell from './Components/ListNameCell';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Welcome to the app!',
+    title: 'Lists',
   };
 
   state = {
