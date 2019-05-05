@@ -10,20 +10,29 @@ import {
 import postData from './helpers/Requests';
 
 class SignUpScreen extends React.Component {
-  state = { 
-    email: '',
-    placeholderEmail: 'Email address',
-    placeholderPassword: 'Choose a password...',
+  static navigationOptions = {
+    title: 'Please sign up',
   };
 
-  static navigationOptions = {
-    title: 'Please sign in',
+  state = { 
+    name: '',
+    email: '',
+    password: '',
+    placeholderName: 'Full Name (ex: Jade Smith)',
+    placeholderEmail: 'Email address',
+    placeholderPassword: 'Choose a password...',
   };
 
   render() {
     return (
       <View>
         <View style={styles.loginForm}>
+          <TextInput
+            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({name: text})}
+            value={this.state.name}
+            placeholder={this.state.placeholderName}
+          />
           <TextInput
             style={{height: 40, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({email: text})}
@@ -40,7 +49,7 @@ class SignUpScreen extends React.Component {
         </View>
         <Button 
           title="Sign up" 
-          onPress={this._signInAsync} 
+          onPress={this.pingServer} 
         />
         <View style={styles.otherOption}>
           <Text style={styles.text}>Already have an account?</Text>
@@ -57,24 +66,18 @@ class SignUpScreen extends React.Component {
     this.props.navigation.navigate('SignIn');
   }
 
-  _signInAsync = async () => {
-    this.pingServer()
-    await AsyncStorage.setItem('userToken', 'abc');
-    this.props.navigation.navigate('App');
-  };
-  
+  pingServer = () => {
+    const { name, email, password } = this.state;
+    const url = `https://loop-list.herokuapp.com/signup`;
 
-  pingServer() {
-    const url = `http://10.0.1.2:8080/signup`
-    const name = 'Nicolai Safai'
-    const email = 'test@example3.com'
-    const password = 'password'
-
-    postData(url, {name, email, password})
-    // After a connection is made the data is streamed as JSON
-    .then(res => res.text())
-    .then(text => console.log(text))
-    .catch(err => console.log(err.message))
+    postData(url, { name, email, password })
+      .then(res => res.json())
+      .then(json => {
+        console.log(json.cookie.expires)
+        AsyncStorage.setItem('userToken', json.cookie.expires);
+        this.props.navigation.navigate('App');
+      })
+      .catch(err => console.log(err.message))
   }
 }
 
