@@ -4,11 +4,11 @@ import {
   createBottomTabNavigator, 
   createAppContainer 
 } from 'react-navigation';
-import AuthLoadingScreen from './AuthLoadingScreen';
-import HomeScreen from './AppScreens/HomeScreen';
-import AboutScreen from './AppScreens/AboutScreen';
-import SignInScreen from './AuthScreens/SignInScreen';
-import SignUpScreen from './AuthScreens/SignUpScreen';
+import HomeScreen from './Components/AppScreens/HomeScreen';
+import AboutScreen from './Components/AppScreens/AboutScreen';
+import AuthLoadingScreen from './Components/AuthScreens/AuthLoadingScreen';
+import SignInScreen from './Components/AuthScreens/SignInScreen';
+import SignUpScreen from './Components/AuthScreens/SignUpScreen';
 
 
 const AppStack = createStackNavigator({ 
