@@ -2,16 +2,16 @@ import React from 'react';
 import {
   AsyncStorage,
   View,
-  Button,
   Text,
   TextInput,
-  StyleSheet,
 } from 'react-native';
+import { Button } from 'react-native-elements';
 import postData from './helpers/Requests';
+import styles from './helpers/FormStyles';
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
-    title: 'Please sign in',
+    title: 'Sign In',
   };
 
   state = { 
@@ -26,28 +26,31 @@ class SignInScreen extends React.Component {
       <View>
         <View style={styles.loginForm}>
           <TextInput
-            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({email: text})}
             value={this.state.email}
             placeholder={this.state.placeholderEmail}
+            style={styles.inputField}
           />
           <TextInput
-            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({password: text})}
             value={this.state.password}
             placeholder={this.state.placeholderPassword}
             secureTextEntry={true}
+            style={styles.inputField}
           />
         </View>
         <Button 
           title="Sign in" 
           onPress={this.pingServer} 
+          buttonStyle={styles.ctaBtn}
         />
         <View style={styles.otherOption}>
           <Text style={styles.text}>Don't have an account?</Text>
           <Button 
             title="Signup" 
             onPress={this.signUp}
+            type="clear"
+            buttonStyle={styles.otherBtn}
           />
         </View>
       </View>
@@ -74,19 +77,3 @@ class SignInScreen extends React.Component {
 }
 
 export default SignInScreen;
-
-const styles = StyleSheet.create({
-  loginForm: {
-    fontSize: 16,
-  },
-  otherOption: {
-    display: 'flex',
-    justifyContent: 'center', 
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 16,
-    color: 'grey',
-  }
-});
