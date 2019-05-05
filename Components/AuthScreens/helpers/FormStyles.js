@@ -1,24 +1,22 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  appTitle: {
+    marginTop: 40,
+    textAlign: 'center',
+    fontSize: 36,
+  },
   loginForm: {
-    marginTop: 60,
-    fontSize: 16,
+    marginTop: 20,
+    fontSize: 18,
     padding: 20,
   },
-  otherOption: {
-    marginTop: 20,
-    display: 'flex',
-    justifyContent: 'center', 
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   text: {
-    fontSize: 16,
+    fontSize: 18,
     color: 'grey',
   },
   inputField: {
-    height: 40,
+    fontSize: 16,
     borderColor: 'gray',
     borderWidth: 1,
     padding: 12,
@@ -32,11 +30,16 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
   },
+  otherOption: {
+    marginTop: 30,
+    display: 'flex',
+    justifyContent: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   otherBtn: {
     margin: 0,
-    borderColor: '#28a745',
-    // backgroundColor: '#00000000',
-    // color: '#000000',
+    marginLeft: 10,
   }
 });
 

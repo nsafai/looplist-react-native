@@ -8,6 +8,7 @@ import {
 import { Button } from 'react-native-elements';
 import postData from './helpers/Requests';
 import styles from './helpers/FormStyles';
+import CustomText from '../CustomText';
  
 class SignUpScreen extends React.Component {
   static navigationOptions = {
@@ -26,6 +27,7 @@ class SignUpScreen extends React.Component {
   render() {
     return (
       <View>
+        <CustomText style={styles.appTitle}>looplist</CustomText>
         <View style={styles.loginForm}>
           <TextInput
             onChangeText={(text) => this.setState({name: text})}
@@ -57,7 +59,7 @@ class SignUpScreen extends React.Component {
           <Button 
             title="Login" 
             onPress={this.signIn}
-            type="clear"
+            type="outline"
             buttonStyle={styles.otherBtn}
           />
         </View>
