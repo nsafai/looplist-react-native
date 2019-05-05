@@ -5,21 +5,19 @@ import {
   createAppContainer 
 } from 'react-navigation';
 import HomeScreen from './Components/AppScreens/HomeScreen';
-import AboutScreen from './Components/AppScreens/AboutScreen';
 import AuthLoadingScreen from './Components/AuthScreens/AuthLoadingScreen';
 import SignInScreen from './Components/AuthScreens/SignInScreen';
 import SignUpScreen from './Components/AuthScreens/SignUpScreen';
 import DetailScreen from './Components/AppScreens/ListDetailScreen';
-
+import { bgColor } from './Components/helpers/Colors';
 
 const AppStack = createStackNavigator({ 
   Home: HomeScreen, 
-  About: AboutScreen,
-  Detail: DetailScreen
+  Detail: DetailScreen,
 },
 {
   headerMode: 'screen',
-  cardStyle: { backgroundColor: '#f1f2f6' },
+  cardStyle: { backgroundColor: bgColor },
 });
 const AuthStack = createStackNavigator({ 
   SignUp: SignUpScreen, 
@@ -27,7 +25,7 @@ const AuthStack = createStackNavigator({
 },
 {
   headerMode: 'screen',
-  cardStyle: { backgroundColor: '#f1f2f6' },
+  cardStyle: { backgroundColor: bgColor },
 });
 
 export default createAppContainer(createSwitchNavigator(

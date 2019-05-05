@@ -32,7 +32,6 @@ class CustomText extends Component {
     } else {
       return <ActivityIndicator size='large' />;
     }
-    
   }
 }
 

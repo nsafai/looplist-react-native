@@ -2,13 +2,15 @@ import React from 'react';
 import {
   AsyncStorage,
   View,
+  Button,
   ScrollView,
   Text,
   TextInput,
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button as StyledButton } from 'react-native-elements';
 import { postData } from '../helpers/Requests';
-import styles from './helpers/FormStyles';
+import styles from './styles/FormStyles';
+import { placeholder } from '../helpers/Colors';
 import CustomText from '../CustomText';
 import { HOST_URL } from 'react-native-dotenv';
 
@@ -42,13 +44,17 @@ class SignInScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView keyboardShouldPersistTaps='handled'>
+      <ScrollView 
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={styles.wrapper}
+      >
         <CustomText style={styles.appTitle}>looplist</CustomText>
         <View style={styles.loginForm}>
           <TextInput
             onChangeText={(text) => this.onChangeText(text, 'email')}
             value={this.state.email}
             placeholder={this.state.placeholderEmail}
+            placeholderTextColor={placeholder}
             style={styles.inputField}
             autoCapitalize = 'none'
           />
@@ -56,25 +62,26 @@ class SignInScreen extends React.Component {
             onChangeText={(text) => this.onChangeText(text, 'password')}
             value={this.state.password}
             placeholder={this.state.placeholderPassword}
+            placeholderTextColor={placeholder}
             secureTextEntry={true}
             style={styles.inputField}
             autoCapitalize = 'none'
           />
         </View>
         {this.renderHelperText()}
-        <Button 
+        <StyledButton 
           title="Sign in" 
           onPress={this.pingServer} 
           buttonStyle={styles.ctaBtn}
         />
         <View style={styles.otherOption}>
-          <CustomText style={styles.text}>Don't have an account?</CustomText>
-          <Button 
-            title="Signup" 
+          <CustomText style={styles.otherOptionText}>Don't have an account?</CustomText>
+          <CustomText 
             onPress={this.signUp}
-            type="outline"
-            buttonStyle={styles.otherBtn}
-          />
+            style={styles.otherBtn}
+          >
+            Signup
+          </CustomText>
         </View>
       </ScrollView>
     );
@@ -102,7 +109,7 @@ class SignInScreen extends React.Component {
           if (json.status == 401) {
             let errors = [
               <CustomText style={styles.helperText} key={'credentials'}>
-                Email or password are incorrect
+                Email and/or password are incorrect
               </CustomText> 
             ];
             this.setState({

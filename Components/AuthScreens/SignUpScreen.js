@@ -3,14 +3,16 @@ import {
   AsyncStorage,
   ScrollView,
   View,
+  Button,
   Text,
   TextInput,
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button as StyledButton } from 'react-native-elements';
 import { postData } from '../helpers/Requests';
-import styles from './helpers/FormStyles';
+import styles from './styles/FormStyles';
 import CustomText from '../CustomText';
 import { HOST_URL } from 'react-native-dotenv';
+import { placeholder } from '../helpers/Colors';
  
 class SignUpScreen extends React.Component {
   static navigationOptions = {
@@ -51,13 +53,17 @@ class SignUpScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView keyboardShouldPersistTaps='handled'>
+      <ScrollView 
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={styles.wrapper}
+      >
         <CustomText style={styles.appTitle}>looplist</CustomText>
         <View style={styles.loginForm}>
           <TextInput
             onChangeText={(text) => this.onChangeText(text, 'name')}
             value={this.state.name}
             placeholder={this.state.placeholderName}
+            placeholderTextColor={placeholder}
             style={styles.inputField}
             autoCapitalize = 'words'
           />
@@ -65,6 +71,7 @@ class SignUpScreen extends React.Component {
             onChangeText={(text) => this.onChangeText(text, 'email')}
             value={this.state.email}
             placeholder={this.state.placeholderEmail}
+            placeholderTextColor={placeholder}
             style={styles.inputField}
             autoCapitalize = 'none'
           />
@@ -72,25 +79,26 @@ class SignUpScreen extends React.Component {
             onChangeText={(text) => this.onChangeText(text, 'password')}
             value={this.state.password}
             placeholder={this.state.placeholderPassword}
+            placeholderTextColor={placeholder}
             secureTextEntry={true}
             style={styles.inputField}
             autoCapitalize = 'none'
           />
         </View>
         {this.renderHelperText()}
-        <Button 
+        <StyledButton 
           title="Sign up" 
           onPress={this.pingServer}
           buttonStyle={styles.ctaBtn}
         />
         <View style={styles.otherOption}>
-          <CustomText style={styles.text}>Already have an account?</CustomText>
-          <Button 
-            title="Login" 
+          <CustomText style={styles.otherOptionText}>Already have an account?</CustomText>
+          <CustomText 
             onPress={this.signIn}
-            type="outline"
-            buttonStyle={styles.otherBtn}
-          />
+            style={styles.otherBtn}
+          >
+            Login
+          </CustomText>
         </View>
       </ScrollView>
     );

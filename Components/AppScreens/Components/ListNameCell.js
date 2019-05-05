@@ -1,18 +1,19 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
-
+import Icon from 'react-native-vector-icons/Ionicons';
+import { grey } from '../../helpers/Colors';
 
 const ListNameCell = ({ list, onPress }) => {
   const { title, todos } = list;
   return (
     <TouchableHighlight 
-      style={{ marginLeft:10, marginRight:10 }}
+      style={styles.cellContainer}
       underlayColor='#6af'
       onPress={onPress}
     >
       <View style={styles.cell} >
         <Text style={styles.text}>{title}</Text>
-        <Text style={styles.disclosureIcon}>〉</Text>
+        <Icon name="ios-arrow-forward" size={18} color={grey} />
       </View>
     </TouchableHighlight>
   )
@@ -21,23 +22,20 @@ const ListNameCell = ({ list, onPress }) => {
 export default ListNameCell
 
 const styles = StyleSheet.create({
+  cellContainer: {
+    flexDirection: 'row',
+  },
   cell: {
     borderBottomWidth: 1, 
     borderColor: '#ddd',
     backgroundColor: '#fff',
+    width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    flex: 1,
-    margin: 0,
-    width: '100%',
+    padding: 20,
   },
   text:{
-    padding: 20,
-    fontSize: 20,
-    margin: 0,
+    fontSize: 18,
   },
-  disclosureIcon: {
-    margin: 0,
-  }
 })

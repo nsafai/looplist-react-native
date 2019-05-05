@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import CustomText from '../CustomText';
+import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
 import { HOST_URL } from 'react-native-dotenv';
 import { getData } from '../helpers/Requests';
+import { green } from '../helpers/Colors';
 
 class ListDetailScreen extends Component {
   constructor(props) {
@@ -17,7 +20,7 @@ class ListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.state.params.title || '',
+      title: '',
     }
   }
 
@@ -50,13 +53,26 @@ class ListDetailScreen extends Component {
     const { todos } = this.state;
     if (todos.length > 0) {
       return todos;
+    } else {
+      return <ActivityIndicator size='large' />;
     }
+  }
+
+  resetTodos() {
+
   }
   
   render() {
     return (
-      <ScrollView styles={styles.container}>
-        <Text style={styles.title}>{this.title}</Text>
+      <ScrollView style={styles.container}>
+        <View style={styles.titleAndBtn}>
+          <CustomText style={styles.title}>{this.title}</CustomText>
+          <Button 
+            title="Reset All" 
+            onPress={this.resetTodos}
+            buttonStyle={styles.resetBtn}
+          />
+        </View>
         {this.renderTodos()}
       </ScrollView>
     )
@@ -69,10 +85,18 @@ export default ListDetailScreen
 const styles = StyleSheet.create({
   title: {
     fontSize: 32,
+  }, 
+  titleAndBtn: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
     margin: 10,
     padding: 20,
-  }, 
-  container: {
-    flex: 1,
   },
+  resetBtn: {
+    backgroundColor: green,
+    width: 100,
+  }
 })

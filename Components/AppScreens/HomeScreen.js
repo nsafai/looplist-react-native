@@ -1,19 +1,20 @@
 import React from 'react';
 import {
   AsyncStorage,
-  View,
   ScrollView,
-  Button,
   StyleSheet,
-  FlatList
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
+import CustomText from '../CustomText';
 import { getData } from '../helpers/Requests';
 import { HOST_URL } from 'react-native-dotenv';
 import ListNameCell from './Components/ListNameCell';
+import { green } from '../helpers/Colors';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Lists',
+    title: '',
   };
 
   state = {
@@ -36,11 +37,12 @@ class HomeScreen extends React.Component {
       .catch(err => console.log(err.message))
   }
 
-  render() {
-    // You'll need this to navigate to DetailScreen
-    const { navigate } = this.props.navigation
-    return (
-      <ScrollView style={styles.container}>
+  renderLists() {
+    const { lists } = this.state;
+    const { navigate } = this.props.navigation; // to navigate to DetailScreen
+
+    if (lists.length > 0) {
+      return (
         <FlatList 
           style={styles.list}
           data={this.state.lists}
@@ -54,18 +56,29 @@ class HomeScreen extends React.Component {
           keyExtractor={(item, index) => `${index}-${item}`}
           className={styles.listsContainer}
         />
-        <Button 
-          title="Logout"
+      )
+    } else {
+      return <ActivityIndicator size='large' />;
+    }
+  }
+
+  render() {
+    return (
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.wrapper}
+      >
+        <CustomText style={styles.title}>My Lists</CustomText>
+        {this.renderLists()}
+        <CustomText 
           style={styles.logOut}
           onPress={this._signOutAsync}
-        />
+        >
+          Logout
+        </CustomText>
       </ScrollView>
     );
   }
-
-  _showMoreApp = () => {
-    this.props.navigation.navigate('About');
-  };
 
   _signOutAsync = async () => {
     await AsyncStorage.clear();
@@ -76,17 +89,30 @@ class HomeScreen extends React.Component {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     display: 'flex',
-    margin: 0,
-    flex: 1,
+    justifyContent: 'space-between',
+    // alignItems: 'center',
+    // alignSelf: 'stretch',
+    // textAlign: 'center',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    padding: 30,
+    textAlign: 'left',
   },
   listsContainer: {
-    display: 'flex',
     margin: 0,
-    flex: 1,
+    padding: 0,
+    width: '100%',
+    alignSelf: 'stretch',
+    textAlign: 'center',
   },
   logOut: {
     marginTop: 30,
+    color: green,
+    fontSize: 16,
+    textAlign: 'center',
   }
 });

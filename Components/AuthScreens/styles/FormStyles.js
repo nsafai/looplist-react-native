@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native';
-
-const green = '#28a745';
-const red = '#c0392b';
+import { red, green, grey } from '../../helpers/Colors';
 
 const styles = StyleSheet.create({
   appTitle: {
@@ -12,45 +10,47 @@ const styles = StyleSheet.create({
   loginForm: {
     marginTop: 20,
     fontSize: 18,
-    padding: 20,
-    paddingBottom: 10,
-  },
-  text: {
-    fontSize: 18,
-    color: 'grey',
+    padding: 24,
+    paddingBottom: 12,
   },
   inputField: {
     fontSize: 16,
-    borderColor: 'gray',
     backgroundColor: 'white',
-    borderWidth: 1,
-    padding: 12,
-    marginTop: 5,
-    marginBottom: 5,
-    marginLeft: 10,
-    marginRight: 10,
+    padding: 18,
+    marginTop: 6,
+    marginBottom: 6,
+    marginLeft: 12,
+    marginRight: 12,
   },
   helperText: {
-    marginLeft: 30,
-    marginRight: 30,
+    marginLeft: 36,
+    marginRight: 36,
     color: red,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   ctaBtn: {
     backgroundColor: green,
-    marginLeft: 30,
-    marginRight: 30,
+    marginTop: 0,
+    padding: 12,
+    marginLeft: 36,
+    marginRight: 36,
   },
   otherOption: {
-    marginTop: 30,
+    marginTop: 24,
     display: 'flex',
     justifyContent: 'center', 
     flexDirection: 'row',
     alignItems: 'center',
   },
+  otherOptionText: {
+    fontSize: 16,
+    color: grey,
+  },
   otherBtn: {
-    margin: 0,
-    marginLeft: 10,
+    fontSize: 16,
+    padding: 0,
+    marginLeft: 12,
+    color: green,
   }
 });
 

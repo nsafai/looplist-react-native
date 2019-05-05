@@ -21,7 +21,7 @@ The [backend](https://github.com/nsafai/looplist) uses Node.js, Express.js, and 
     
 - [x] Build ChecklistDetail view
     - [x] fetch all todos
-    - [ ] allow user to toggle todo completion
+    - [x] allow user to toggle todo completion
     - [ ] allow user to reset all todos
     
     - [ ] Stretch:
