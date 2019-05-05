@@ -35,10 +35,7 @@ class SignUpScreen extends React.Component {
         return errors;
       }
       return (
-      <CustomText 
-        style={styles.helperText}
-        key={'generic-err'}
-      >
+      <CustomText style={styles.helperText} key={'generic-err'}>
         Please fill out all fields.
       </CustomText>
       )

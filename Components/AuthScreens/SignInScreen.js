@@ -22,7 +22,23 @@ class SignInScreen extends React.Component {
     password: '',
     placeholderEmail: 'Email address',
     placeholderPassword: 'Enter your password',
+    errors: [],
+    showHelperText: false,
   };
+
+  renderHelperText() {
+    const { showHelperText, errors } = this.state;
+    if (showHelperText == true) {
+      if (errors.length > 0) {
+        return errors;
+      }
+      return (
+      <CustomText style={styles.helperText} key={'generic-err'}>
+        Please fill out all fields.
+      </CustomText>
+      )
+    }
+  }
 
   render() {
     return (
@@ -30,14 +46,14 @@ class SignInScreen extends React.Component {
         <CustomText style={styles.appTitle}>looplist</CustomText>
         <View style={styles.loginForm}>
           <TextInput
-            onChangeText={(text) => this.setState({email: text})}
+            onChangeText={(text) => this.onChangeText(text, 'email')}
             value={this.state.email}
             placeholder={this.state.placeholderEmail}
             style={styles.inputField}
             autoCapitalize = 'none'
           />
           <TextInput
-            onChangeText={(text) => this.setState({password: text})}
+            onChangeText={(text) => this.onChangeText(text, 'password')}
             value={this.state.password}
             placeholder={this.state.placeholderPassword}
             secureTextEntry={true}
@@ -45,6 +61,7 @@ class SignInScreen extends React.Component {
             autoCapitalize = 'none'
           />
         </View>
+        {this.renderHelperText()}
         <Button 
           title="Sign in" 
           onPress={this.pingServer} 
@@ -63,6 +80,13 @@ class SignInScreen extends React.Component {
     );
   }
 
+  onChangeText(text, fieldName) {
+    this.setState({
+      [fieldName]: text,
+      showHelperText: false,
+    })
+  }
+
   signUp = () => {
     this.props.navigation.navigate('SignUp');
   }
@@ -77,7 +101,15 @@ class SignInScreen extends React.Component {
         if (json) {
           console.log(json)
           if (json.status == 401) {
-            console.log(json.status);
+            let errors = [
+              <CustomText style={styles.helperText} key={'credentials'}>
+                Email or password are incorrect
+              </CustomText> 
+            ];
+            this.setState({
+              showHelperText: true,
+              errors
+            })
           }
 
           else if (json.user) {
