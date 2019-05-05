@@ -99,7 +99,6 @@ class SignInScreen extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json) {
-          console.log(json)
           if (json.status == 401) {
             let errors = [
               <CustomText style={styles.helperText} key={'credentials'}>
@@ -120,9 +119,7 @@ class SignInScreen extends React.Component {
         }
       })
       .catch(err => {
-        console.log('inside CATCH');
         console.log(err);
-        console.log(err.message);
       })
   }
 }

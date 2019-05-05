@@ -108,7 +108,6 @@ class SignUpScreen extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json) {
-          // console.log(json)
           if (json.errors) {
             let errors = [];
             for (key in json.errors) {
@@ -120,7 +119,6 @@ class SignUpScreen extends React.Component {
                 <CustomText style={styles.helperText} key={cleanErr}>{cleanErr}</CustomText> 
               );
             }
-            console.log(errors);
             this.setState({
               showHelperText: true,
               errors
@@ -134,7 +132,7 @@ class SignUpScreen extends React.Component {
           }
         }
       })
-      .catch(err => console.log(err.message))
+      .catch(err => console.log(err))
   }
 }
 

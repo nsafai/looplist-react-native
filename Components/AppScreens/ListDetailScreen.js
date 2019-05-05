@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView } from 'react-native';
 import Todo from './Components/Todo';
 import { HOST_URL } from 'react-native-dotenv';
 import { getData } from '../helpers/Requests';
@@ -32,7 +32,6 @@ class ListDetailScreen extends Component {
       .then(json => {
         let todos = [];
         const { currentListTodos } = json;
-        console.log(currentListTodos);
         currentListTodos.forEach((todo, i) => {
           todos.push(
             <Todo 
@@ -46,12 +45,19 @@ class ListDetailScreen extends Component {
       })
       .catch(err => console.log(err))
   }
+
+  renderTodos() {
+    const { todos } = this.state;
+    if (todos.length > 0) {
+      return todos;
+    }
+  }
   
   render() {
     return (
       <ScrollView styles={styles.container}>
         <Text style={styles.title}>{this.title}</Text>
-        {this.state.todos}
+        {this.renderTodos()}
       </ScrollView>
     )
   }

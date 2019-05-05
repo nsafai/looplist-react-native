@@ -1,33 +1,43 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { CheckBox } from 'react-native-elements'
+import { postData } from '../../helpers/Requests';
+import { HOST_URL } from 'react-native-dotenv';
 
 class Todo extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   state = {
     todos: [],
+    completed: this.props.completed,
   }
 
-  componentDidMount() {
-    console.log(this.props.completed);
-    this.setState({
-      checked: this.props.completed,
-    })
+  pressChkBox = (todoId) => {
+    const url = `${HOST_URL}/todos/toggle/${todoId}`;
+    // send post request to update todo
+    postData(url, {})
+      .then(res => res.json())
+      .then(json => {
+        if (json) {
+          const completed = json.completed;
+          this.setState({ completed });
+        }
+      })
+      .catch(err => console.log(err))
   }
 
   render() {
-    const { todoId, name } = this.props;
+    const { todoId, name, completed } = this.props;
     
     return (
       <View style={styles.cell} >
         <CheckBox 
           style={styles.checkbox}
-          checked={this.state.checked}
+          checked={this.state.completed}
           checkedColor={'#28a745'}
-          onPress={() => this.setState({checked: !this.state.checked})}
+          onPress={() => this.pressChkBox(todoId)}
           data-todoId={todoId}
           size={30}
         />
