@@ -39,6 +39,7 @@ class ListDetailScreen extends Component {
               key={todo._id}
               todoId={todo._id}
               name={todo.name}
+              completed={todo.completed}
             />);
         });
         this.setState({ todos });
