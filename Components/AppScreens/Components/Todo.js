@@ -19,7 +19,7 @@ class Todo extends Component {
   }
 
   render() {
-    const { todoId, completed, name } = this.props;
+    const { todoId, name } = this.props;
     
     return (
       <View style={styles.cell} >
@@ -28,6 +28,8 @@ class Todo extends Component {
           checked={this.state.checked}
           checkedColor={'#28a745'}
           onPress={() => this.setState({checked: !this.state.checked})}
+          data-todoId={todoId}
+          size={30}
         />
         <Text style={styles.text}>{name}</Text>
       </View>
@@ -40,20 +42,17 @@ export default Todo;
 const styles = StyleSheet.create({
   cell: {
     borderBottomWidth: 1, 
-    borderColor: '#111',
+    borderColor: '#ddd',
     backgroundColor: '#fff',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
-    marginLeft: 20,
-    marginRight: 20,
   },
   text:{
     margin: 10,
-    marginLeft: 30,
     fontSize: 20
   },
   checkbox: {
-    marginLeft: 10,
+    marginLeft: 40,
   }
 })

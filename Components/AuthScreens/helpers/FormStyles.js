@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   appTitle: {
-    marginTop: 40,
+    marginTop: 60,
     textAlign: 'center',
     fontSize: 36,
   },
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   inputField: {
     fontSize: 16,
     borderColor: 'gray',
+    backgroundColor: 'white',
     borderWidth: 1,
     padding: 12,
     marginTop: 5,

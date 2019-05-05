@@ -63,7 +63,7 @@ class SignUpScreen extends React.Component {
           <Button 
             title="Login" 
             onPress={this.signIn}
-            type="outline"
+            type="clear"
             buttonStyle={styles.otherBtn}
           />
         </View>

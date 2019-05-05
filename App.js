@@ -16,10 +16,18 @@ const AppStack = createStackNavigator({
   Home: HomeScreen, 
   About: AboutScreen,
   Detail: DetailScreen
+},
+{
+  headerMode: 'screen',
+  cardStyle: { backgroundColor: '#f1f2f6' },
 });
 const AuthStack = createStackNavigator({ 
   SignUp: SignUpScreen, 
   SignIn: SignInScreen 
+},
+{
+  headerMode: 'screen',
+  cardStyle: { backgroundColor: '#f1f2f6' },
 });
 
 export default createAppContainer(createSwitchNavigator(

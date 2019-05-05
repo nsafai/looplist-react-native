@@ -21,10 +21,10 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.getLists()
+    this.getLists();
   }
 
-  getLists = (name) => {
+  getLists = () => {
     const url = `${HOST_URL}/lists`;
     getData(url)
       .then(res => res.json())
@@ -47,12 +47,18 @@ class HomeScreen extends React.Component {
           renderItem={({item}) => (
             <ListNameCell 
               onPress={() => navigate('Detail', item)} 
-              list={item} 
+              list={item}
+              style={styles.listNameCell}
             />
           )}
           keyExtractor={(item, index) => `${index}-${item}`}
+          className={styles.listsContainer}
         />
-        <Button title="Logout" onPress={this._signOutAsync} />
+        <Button 
+          title="Logout"
+          style={styles.logOut}
+          onPress={this._signOutAsync}
+        />
       </ScrollView>
     );
   }
@@ -71,23 +77,16 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    display: 'flex',
+    margin: 0,
+    flex: 1,
   },
-  list: {
-    // flex: 1,
-    // width: '100%'
+  listsContainer: {
+    display: 'flex',
+    margin: 0,
+    flex: 1,
   },
-  cell: {
-    // width: '100%'
-  },
-  separator: {
-    // 
-  },
-  segmentedControl: {
-    // width: 150,
-    // margin: 10
+  logOut: {
+    marginTop: 30,
   }
 });

@@ -66,14 +66,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 20,
   }, 
-  feature: {
-    fontSize: 16,
-    margin: 10
-  },
-  scrollView: {
+  container: {
     flex: 1,
   },
-  container: {
-    margin: 10
-  }
 })

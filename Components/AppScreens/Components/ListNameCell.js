@@ -23,18 +23,21 @@ export default ListNameCell
 const styles = StyleSheet.create({
   cell: {
     borderBottomWidth: 1, 
-    borderColor: '#999',
+    borderColor: '#ddd',
     backgroundColor: '#fff',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    margin: 0
+    flex: 1,
+    margin: 0,
+    width: '100%',
   },
   text:{
-    margin: 10,
-    fontSize: 20
+    padding: 20,
+    fontSize: 20,
+    margin: 0,
   },
   disclosureIcon: {
-
+    margin: 0,
   }
 })
