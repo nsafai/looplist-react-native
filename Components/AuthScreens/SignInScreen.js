@@ -51,11 +51,11 @@ class SignInScreen extends React.Component {
           buttonStyle={styles.ctaBtn}
         />
         <View style={styles.otherOption}>
-          <Text style={styles.text}>Don't have an account?</Text>
+          <CustomText style={styles.text}>Don't have an account?</CustomText>
           <Button 
             title="Signup" 
             onPress={this.signUp}
-            type="clear"
+            type="outline"
             buttonStyle={styles.otherBtn}
           />
         </View>
@@ -74,11 +74,24 @@ class SignInScreen extends React.Component {
     postData(url, { email, password })
       .then(res => res.json())
       .then(json => {
-        AsyncStorage.setItem('userToken', json.user);
-        AsyncStorage.setItem('sessionExpires', json.expires)
-        this.props.navigation.navigate('App');
+        if (json) {
+          console.log(json)
+          if (json.status == 401) {
+            console.log(json.status);
+          }
+
+          else if (json.user) {
+            AsyncStorage.setItem('userToken', json.user);
+            AsyncStorage.setItem('sessionExpires', json.expires)
+            this.props.navigation.navigate('App');
+          }
+        }
       })
-      .catch(err => console.log(err.message))
+      .catch(err => {
+        console.log('inside CATCH');
+        console.log(err);
+        console.log(err.message);
+      })
   }
 }
 

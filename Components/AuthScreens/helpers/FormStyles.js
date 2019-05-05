@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+const green = '#28a745';
+const red = '#c0392b';
 
 const styles = StyleSheet.create({
   appTitle: {
@@ -11,6 +13,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 18,
     padding: 20,
+    paddingBottom: 10,
   },
   text: {
     fontSize: 18,
@@ -27,8 +30,14 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
   },
+  helperText: {
+    marginLeft: 30,
+    marginRight: 30,
+    color: red,
+    marginBottom: 10,
+  },
   ctaBtn: {
-    backgroundColor: '#28a745',
+    backgroundColor: green,
     marginLeft: 30,
     marginRight: 30,
   },
