@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   AsyncStorage,
+  ScrollView,
   View,
   Text,
   TextInput,
@@ -26,7 +27,7 @@ class SignUpScreen extends React.Component {
 
   render() {
     return (
-      <View>
+      <ScrollView keyboardShouldPersistTaps='handled'>
         <CustomText style={styles.appTitle}>looplist</CustomText>
         <View style={styles.loginForm}>
           <TextInput
@@ -34,12 +35,14 @@ class SignUpScreen extends React.Component {
             value={this.state.name}
             placeholder={this.state.placeholderName}
             style={styles.inputField}
+            autoCapitalize = 'words'
           />
           <TextInput
             onChangeText={(text) => this.setState({email: text})}
             value={this.state.email}
             placeholder={this.state.placeholderEmail}
             style={styles.inputField}
+            autoCapitalize = 'none'
           />
           <TextInput
             onChangeText={(text) => this.setState({password: text})}
@@ -47,6 +50,7 @@ class SignUpScreen extends React.Component {
             placeholder={this.state.placeholderPassword}
             secureTextEntry={true}
             style={styles.inputField}
+            autoCapitalize = 'none'
           />
         </View>
         <Button 
@@ -63,7 +67,7 @@ class SignUpScreen extends React.Component {
             buttonStyle={styles.otherBtn}
           />
         </View>
-      </View>
+      </ScrollView>
     );
   }
 
