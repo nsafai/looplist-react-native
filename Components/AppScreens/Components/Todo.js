@@ -17,8 +17,8 @@ class Todo extends Component {
     const { todoId, completed, name } = this.props;
     return (
       <View style={styles.cell} >
-        <Text style={styles.disclosureIcon}>✅</Text>
-        <Text style={styles.text}>{todoId}</Text>
+        <Text style={styles.checkbox}>✅</Text>
+        <Text style={styles.text}>{name}</Text>
       </View>
     );
   }
@@ -29,17 +29,20 @@ export default Todo;
 const styles = StyleSheet.create({
   cell: {
     borderBottomWidth: 1, 
-    borderColor: '#999',
+    borderColor: '#111',
     backgroundColor: '#fff',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
-    margin: 0
+    marginLeft: 20,
+    marginRight: 20,
   },
   text:{
     margin: 10,
+    marginLeft: 30,
     fontSize: 20
   },
-  disclosureIcon: {
+  checkbox: {
+    marginLeft: 10,
   }
 })

@@ -11,13 +11,8 @@ class ListDetailScreen extends Component {
     this.id = state.params.id;
     this.title = state.params.title;
     this.todos = state.params.todos;
-
     this.todoComponents = [];
     this.getTodos(this.id);
-    
-    this.todos.forEach((todoId, i) => {
-      this.todoComponents.push(<Todo key={todoId} todoId={todoId} />);
-    });
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -35,11 +30,18 @@ class ListDetailScreen extends Component {
     getData(url)
       .then(res => res.json())
       .then(json => {
-        const { currentList, currentListTodos } = json;
+        let todos = [];
+        const { currentListTodos } = json;
         console.log(currentListTodos);
-        this.setState( {
-          todos: currentListTodos,
-        })
+        currentListTodos.forEach((todo, i) => {
+          todos.push(
+            <Todo 
+              key={todo._id}
+              todoId={todo._id}
+              name={todo.name}
+            />);
+        });
+        this.setState({ todos });
       })
       .catch(err => console.log(err))
   }
@@ -48,7 +50,7 @@ class ListDetailScreen extends Component {
     return (
       <ScrollView styles={styles.container}>
         <Text style={styles.title}>{this.title}</Text>
-        {this.todoComponents}
+        {this.state.todos}
       </ScrollView>
     )
   }
