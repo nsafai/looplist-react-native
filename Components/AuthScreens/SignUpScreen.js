@@ -7,7 +7,7 @@ import {
   TextInput,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import postData from './helpers/Requests';
+import { postData } from '../helpers/Requests';
 import styles from './helpers/FormStyles';
 import CustomText from '../CustomText';
  
@@ -77,13 +77,14 @@ class SignUpScreen extends React.Component {
 
   pingServer = () => {
     const { name, email, password } = this.state;
-    const url = `https://loop-list.herokuapp.com/signup`;
+    const url = `${HOST_URL}/signup`;
 
     postData(url, { name, email, password })
       .then(res => res.json())
       .then(json => {
-        console.log(json.cookie.expires)
-        AsyncStorage.setItem('userToken', json.cookie.expires);
+        console.log(json)
+        AsyncStorage.setItem('userToken', json.user);
+        AsyncStorage.setItem('sessionExpires', json.expires)
         this.props.navigation.navigate('App');
       })
       .catch(err => console.log(err.message))

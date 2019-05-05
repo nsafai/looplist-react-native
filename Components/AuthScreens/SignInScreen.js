@@ -7,9 +7,10 @@ import {
   TextInput,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import postData from './helpers/Requests';
+import { postData } from '../helpers/Requests';
 import styles from './helpers/FormStyles';
 import CustomText from '../CustomText';
+import { HOST_URL } from 'react-native-dotenv';
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -68,13 +69,14 @@ class SignInScreen extends React.Component {
 
   pingServer = () => {
     const { email, password } = this.state;
-    const url = `https://loop-list.herokuapp.com/login`;
+    const url = `${HOST_URL}/login`;
 
     postData(url, { email, password })
       .then(res => res.json())
       .then(json => {
-        console.log(json.cookie.expires)
-        AsyncStorage.setItem('userToken', json.cookie.expires);
+        console.log(json)
+        AsyncStorage.setItem('userToken', json.user);
+        AsyncStorage.setItem('sessionExpires', json.expires)
         this.props.navigation.navigate('App');
       })
       .catch(err => console.log(err.message))
