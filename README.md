@@ -15,16 +15,17 @@ The [backend](https://github.com/nsafai/looplist) uses Node.js, Express.js, and 
     - [x] List of checklists
     - [x] Detail view of checklist 
     
-- [ ] Build Flatlist of checklists
-    - [ ] fetch all list names (see this [article](https://hackernoon.com/a-simple-messaging-app-with-react-native-and-socket-io-e1cae3df7bda))
-    - [ ] allow user to click on a list name to pull up the Detail view
+- [x] Build Flatlist of checklists
+    - [x] fetch all list names
+    - [x] allow user to click on a list name to pull up the Detail view
     
-- [ ] Build ChecklistDetail view
-    - [ ] fetch all todos
+- [x] Build ChecklistDetail view
+    - [x] fetch all todos
     - [ ] allow user to toggle todo completion
     - [ ] allow user to reset all todos
     
     - [ ] Stretch:
+      - [ ] Use [socket.io instead](https://hackernoon.com/a-simple-messaging-app-with-react-native-and-socket-io-e1cae3df7bda)
       - [ ] fetch user to edit checklist title
       - [ ] allow user to edit todo
       - [ ] allow user to create new todo
