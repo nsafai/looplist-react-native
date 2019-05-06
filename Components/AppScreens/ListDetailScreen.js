@@ -27,29 +27,33 @@ class ListDetailScreen extends Component {
     currentListTodos: [],
   }
 
-  // updateTodos = (todoObjects) => {
-  //   let todos = [];
-  //   if (todoObjects) {
-      
-  //     this.setState({ todos });
-  //   }
-  // }
-
   getTodos = (id) => {
-    const url = `${HOST_URL}/lists/${id}`;
-    getData(url)
-      .then(res => res.json())
-      .then(json => {
-        const { currentListTodos } = json;
-        this.setState({ currentListTodos })
-      })
-      .catch(err => console.log(err))
+    if (id) {
+      const url = `https://loop-list.herokuapp.com/lists/${id}`;
+      getData(url)
+        .then(res => {
+          // console.log(res);
+          if(res.status >= 200 && res.status < 300) {
+            return res.json();
+          } else {
+            throw new Error("Server can't be reached!");
+          }
+        })
+        .then(json => {
+          console.log(json);
+          const { currentListTodos } = json;
+          if (currentListTodos) {
+            this.setState({ currentListTodos });
+          }
+        })
+        .catch(err => console.log(err))
+    }
   }
 
   renderTodos() {
-    const { todoObjects } = this.state;
-    let todos;
-    todoObjects.forEach((todo) => {
+    const { currentListTodos } = this.state;
+    let todos = [];
+    currentListTodos.forEach((todo) => {
       todos.push(
         <Todo 
           key={todo._id}
@@ -59,15 +63,15 @@ class ListDetailScreen extends Component {
         />
       );
     });
-    if (todos.length > 0) {
+    if (todos.length > 1) {
       return todos;
     } else {
-      return <ActivityIndicator size='large' />;
+      return <CustomText style={styles.helperText}>You don't have any todos yet, add them on www.looplist.xyz</CustomText>;
     }
   }
 
   resetTodos(id) {
-    const url = `${HOST_URL}/lists/reset/${id}`;
+    const url = `https://loop-list.herokuapp.com/lists/reset/${id}`;
     postData(url)
       .then(res => {
         if (res.status === 200) {
@@ -117,5 +121,8 @@ const styles = StyleSheet.create({
   resetBtn: {
     backgroundColor: green,
     width: 100,
+  },
+  helperText: {
+    padding: 30,
   }
 })

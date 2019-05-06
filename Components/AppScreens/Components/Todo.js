@@ -15,7 +15,7 @@ class Todo extends Component {
   }
 
   pressChkBox = (todoId) => {
-    const url = `${HOST_URL}/todos/toggle/${todoId}`;
+    const url = `https://loop-list.herokuapp.com/todos/toggle/${todoId}`;
     // send post request to update todo
     postData(url, {})
       .then(res => res.json())

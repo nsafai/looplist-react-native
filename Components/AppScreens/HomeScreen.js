@@ -26,9 +26,16 @@ class HomeScreen extends React.Component {
   }
 
   getLists = () => {
-    const url = `${HOST_URL}/lists`;
+    const url = `https://loop-list.herokuapp.com/lists`;
     getData(url)
-      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if(res.status >= 200 && res.status < 300) {
+          return res.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
       .then(json => {
         jsonLists = json.lists;
         lists = jsonLists.map(list => { return { id:list._id, title: list.title, todos: list.todoItems } });
@@ -58,7 +65,7 @@ class HomeScreen extends React.Component {
         />
       )
     } else {
-      return <ActivityIndicator size='large' />;
+      return <CustomText style={styles.helperText}>You don't have any lists yet, add them on www.looplist.xyz</CustomText>;
     }
   }
 
@@ -114,5 +121,8 @@ const styles = StyleSheet.create({
     color: green,
     fontSize: 16,
     textAlign: 'center',
+  },
+  helperText: {
+    padding: 30,
   }
 });

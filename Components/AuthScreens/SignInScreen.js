@@ -112,7 +112,8 @@ class SignInScreen extends React.Component {
 
   pingServer = () => {
     const { email, password } = this.state;
-    const url = `${HOST_URL}/login`;
+    console.log(HOST_URL);
+    const url = `https://loop-list.herokuapp.com/login`;
 
     postData(url, { email, password })
       .then(res => {

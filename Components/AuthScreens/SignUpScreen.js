@@ -122,7 +122,7 @@ class SignUpScreen extends React.Component {
 
   pingServer = () => {
     const { name, email, password } = this.state;
-    const url = `${HOST_URL}/signup`;
+    const url = `https://loop-list.herokuapp.com/signup`;
 
     postData(url, { name, email, password })
       .then(res => {
