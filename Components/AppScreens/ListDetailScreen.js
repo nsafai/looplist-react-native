@@ -4,7 +4,7 @@ import CustomText from '../CustomText';
 import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
 import { HOST_URL } from 'react-native-dotenv';
-import { getData } from '../helpers/Requests';
+import { getData, postData } from '../helpers/Requests';
 import { green } from '../helpers/Colors';
 
 class ListDetailScreen extends Component {
@@ -13,7 +13,6 @@ class ListDetailScreen extends Component {
     const { state } = props.navigation;
     this.id = state.params.id;
     this.title = state.params.title;
-    this.todos = state.params.todos;
     this.todoComponents = [];
     this.getTodos(this.id);
   }
@@ -28,23 +27,31 @@ class ListDetailScreen extends Component {
     todos: [],
   }
 
+  updateTodos = (todoObjects) => {
+    let todos = [];
+    if (todoObjects) {
+      todoObjects.forEach((todo) => {
+        todos.push(
+          <Todo 
+            key={todo._id}
+            todoId={todo._id}
+            name={todo.name}
+            completed={todo.completed}
+          />
+        );
+      });
+      console.log("TODOS:", todos);
+      this.setState({ todos });
+    }
+  }
+
   getTodos = (id) => {
     const url = `${HOST_URL}/lists/${id}`;
     getData(url)
       .then(res => res.json())
       .then(json => {
-        let todos = [];
         const { currentListTodos } = json;
-        currentListTodos.forEach((todo, i) => {
-          todos.push(
-            <Todo 
-              key={todo._id}
-              todoId={todo._id}
-              name={todo.name}
-              completed={todo.completed}
-            />);
-        });
-        this.setState({ todos });
+        this.updateTodos(currentListTodos)
       })
       .catch(err => console.log(err))
   }
@@ -58,8 +65,19 @@ class ListDetailScreen extends Component {
     }
   }
 
-  resetTodos() {
-
+  resetTodos(id) {
+    const url = `${HOST_URL}/lists/reset/${id}`;
+    postData(url)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then(json => {
+        const currentListTodos = json;
+        this.updateTodos(currentListTodos)
+      })
+      .catch(err => console.log(err))
   }
   
   render() {
@@ -69,7 +87,7 @@ class ListDetailScreen extends Component {
           <CustomText style={styles.title}>{this.title}</CustomText>
           <Button 
             title="Reset All" 
-            onPress={this.resetTodos}
+            onPress={() => this.resetTodos(this.id)}
             buttonStyle={styles.resetBtn}
           />
         </View>
