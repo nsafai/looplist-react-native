@@ -22,7 +22,7 @@ The [backend](https://github.com/nsafai/looplist) uses Node.js, Express.js, and 
 - [x] Build ChecklistDetail view
     - [x] fetch all todos
     - [x] allow user to toggle todo completion
-    - [ ] allow user to reset all todos
+    - [x] allow user to reset all todos
     
     - [ ] Stretch:
       - [ ] Use [socket.io instead](https://hackernoon.com/a-simple-messaging-app-with-react-native-and-socket-io-e1cae3df7bda)
