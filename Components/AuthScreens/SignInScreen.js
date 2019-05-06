@@ -56,7 +56,8 @@ class SignInScreen extends React.Component {
             placeholder={this.state.placeholderEmail}
             placeholderTextColor={placeholder}
             style={styles.inputField}
-            autoCapitalize = 'none'
+            autoCapitalize='none'
+            keyboardType='email-address'
           />
           <TextInput
             onChangeText={(text) => this.onChangeText(text, 'password')}
