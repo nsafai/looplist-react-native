@@ -32,7 +32,6 @@ class ListDetailScreen extends Component {
       const url = `https://loop-list.herokuapp.com/lists/${id}`;
       getData(url)
         .then(res => {
-          // console.log(res);
           if(res.status >= 200 && res.status < 300) {
             return res.json();
           } else {
@@ -40,7 +39,6 @@ class ListDetailScreen extends Component {
           }
         })
         .then(json => {
-          console.log(json);
           const { currentListTodos } = json;
           if (currentListTodos) {
             this.setState({ currentListTodos });
@@ -48,6 +46,20 @@ class ListDetailScreen extends Component {
         })
         .catch(err => console.log(err))
     }
+  }
+
+  toggleCheckBox = (todoId) => {
+    console.log(todoId);
+    const url = `https://loop-list.herokuapp.com/todos/toggle/${todoId}`;
+    // send post request to update todo
+    postData(url, {})
+      .then(res => res.json())
+      .then(json => {
+        if (json) {
+          this.getTodos(this.id);
+        }
+      })
+      .catch(err => console.log(err))
   }
 
   renderTodos() {
@@ -60,13 +72,14 @@ class ListDetailScreen extends Component {
           todoId={todo._id}
           name={todo.name}
           completed={todo.completed}
+          onPress={this.toggleCheckBox.bind(null, todo._id)}
         />
       );
     });
     if (todos.length > 1) {
       return todos;
     } else {
-      return <CustomText style={styles.helperText}>You don't have any todos yet, add them on www.looplist.xyz</CustomText>;
+      return <ActivityIndicator />;
     }
   }
 
@@ -80,7 +93,9 @@ class ListDetailScreen extends Component {
       })
       .then(json => {
         const currentListTodos = json;
-        this.setState({ currentListTodos });
+        if (currentListTodos) {
+          this.setState({ currentListTodos });
+        }
       })
       .catch(err => console.log(err))
   }
