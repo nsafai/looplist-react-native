@@ -24,26 +24,16 @@ class ListDetailScreen extends Component {
   }
 
   state = {
-    todos: [],
+    currentListTodos: [],
   }
 
-  updateTodos = (todoObjects) => {
-    let todos = [];
-    if (todoObjects) {
-      todoObjects.forEach((todo) => {
-        todos.push(
-          <Todo 
-            key={todo._id}
-            todoId={todo._id}
-            name={todo.name}
-            completed={todo.completed}
-          />
-        );
-      });
-      console.log("TODOS:", todos);
-      this.setState({ todos });
-    }
-  }
+  // updateTodos = (todoObjects) => {
+  //   let todos = [];
+  //   if (todoObjects) {
+      
+  //     this.setState({ todos });
+  //   }
+  // }
 
   getTodos = (id) => {
     const url = `${HOST_URL}/lists/${id}`;
@@ -51,13 +41,24 @@ class ListDetailScreen extends Component {
       .then(res => res.json())
       .then(json => {
         const { currentListTodos } = json;
-        this.updateTodos(currentListTodos)
+        this.setState({ currentListTodos })
       })
       .catch(err => console.log(err))
   }
 
   renderTodos() {
-    const { todos } = this.state;
+    const { todoObjects } = this.state;
+    let todos;
+    todoObjects.forEach((todo) => {
+      todos.push(
+        <Todo 
+          key={todo._id}
+          todoId={todo._id}
+          name={todo.name}
+          completed={todo.completed}
+        />
+      );
+    });
     if (todos.length > 0) {
       return todos;
     } else {
@@ -75,7 +76,7 @@ class ListDetailScreen extends Component {
       })
       .then(json => {
         const currentListTodos = json;
-        this.updateTodos(currentListTodos)
+        this.setState({ currentListTodos });
       })
       .catch(err => console.log(err))
   }

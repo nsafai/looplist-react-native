@@ -108,12 +108,31 @@ class SignUpScreen extends React.Component {
     this.props.navigation.navigate('SignIn');
   }
 
+  showError = (text) => {
+    let errors = [
+      <CustomText style={styles.helperText} key={'credentials'}>
+        {text}
+      </CustomText> 
+    ];
+    this.setState({
+      showHelperText: true,
+      errors
+    })
+  }
+
   pingServer = () => {
     const { name, email, password } = this.state;
     const url = `${HOST_URL}/signup`;
 
     postData(url, { name, email, password })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if(res.status >= 200 && res.status < 300) {
+          return res.json();
+        }  else {
+          throw new Error("Server can't be reached!");
+        }
+      })
       .then(json => {
         if (json) {
           if (json.errors) {
@@ -140,7 +159,10 @@ class SignUpScreen extends React.Component {
           }
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err);
+        this.showError(`Can\'t reach server. ${err.message}.`);
+      })
   }
 }
 

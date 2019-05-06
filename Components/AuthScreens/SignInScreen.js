@@ -98,24 +98,35 @@ class SignInScreen extends React.Component {
     this.props.navigation.navigate('SignUp');
   }
 
+  showError = (text) => {
+    let errors = [
+      <CustomText style={styles.helperText} key={'credentials'}>
+        {text}
+      </CustomText> 
+    ];
+    this.setState({
+      showHelperText: true,
+      errors
+    })
+  }
+
   pingServer = () => {
     const { email, password } = this.state;
     const url = `${HOST_URL}/login`;
 
     postData(url, { email, password })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if(res.status >= 200 && res.status < 300) {
+          return res.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
       .then(json => {
         if (json) {
           if (json.status == 401) {
-            let errors = [
-              <CustomText style={styles.helperText} key={'credentials'}>
-                Email and/or password are incorrect
-              </CustomText> 
-            ];
-            this.setState({
-              showHelperText: true,
-              errors
-            })
+            this.showError('Email and/or password are incorrect');
           }
 
           else if (json.user) {
@@ -127,6 +138,7 @@ class SignInScreen extends React.Component {
       })
       .catch(err => {
         console.log(err);
+        this.showError(`Can\'t reach server. ${err.message}.`);
       })
   }
 }
