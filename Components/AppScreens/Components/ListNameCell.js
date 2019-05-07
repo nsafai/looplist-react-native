@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   text:{
-    fontSize: 18,
+    fontSize: 16,
   },
 })

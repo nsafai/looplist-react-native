@@ -14,6 +14,8 @@ class Todo extends Component {
       <View style={styles.cell} >
         <CheckBox 
           style={styles.checkbox}
+          checkedIcon='check-circle'
+          uncheckedIcon='circle'
           checked={completed}
           checkedColor={'#28a745'}
           onPress={onPress}
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
   },
   text:{
     margin: 10,
-    fontSize: 20
+    fontSize: 16
   },
   checkbox: {
     marginLeft: 40,

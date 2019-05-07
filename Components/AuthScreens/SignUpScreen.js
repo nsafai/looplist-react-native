@@ -6,10 +6,9 @@ import {
   TextInput,
 } from 'react-native';
 import { Button as StyledButton } from 'react-native-elements';
-import { postData } from '../helpers/Requests';
+import { postData, HOST_URL } from '../helpers/Requests';
 import styles from './styles/FormStyles';
 import CustomText from '../CustomText';
-import { HOST_URL } from 'react-native-dotenv';
 import { placeholder } from '../helpers/Colors';
  
 class SignUpScreen extends React.Component {
@@ -121,7 +120,7 @@ class SignUpScreen extends React.Component {
 
   pingServer = () => {
     const { name, email, password } = this.state;
-    const url = `https://loop-list.herokuapp.com/signup`;
+    const url = HOST_URL + '/signup';
 
     postData(url, { name, email, password })
       .then(res => {

@@ -6,11 +6,10 @@ import {
   TextInput,
 } from 'react-native';
 import { Button as StyledButton } from 'react-native-elements';
-import { postData } from '../helpers/Requests';
+import { postData, HOST_URL } from '../helpers/Requests';
 import styles from './styles/FormStyles';
 import { placeholder } from '../helpers/Colors';
 import CustomText from '../CustomText';
-import { HOST_URL } from 'react-native-dotenv';
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -111,7 +110,7 @@ class SignInScreen extends React.Component {
 
   pingServer = () => {
     const { email, password } = this.state;
-    const url = `https://loop-list.herokuapp.com/login`;
+    const url = HOST_URL + '/login';
 
     postData(url, { email, password })
       .then(res => {

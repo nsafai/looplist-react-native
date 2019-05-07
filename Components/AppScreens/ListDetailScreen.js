@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } fro
 import CustomText from '../CustomText';
 import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
-import { HOST_URL } from 'react-native-dotenv';
+import { HOST_URL } from '../helpers/Requests';
 import { green, grey } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -26,7 +26,6 @@ class ListDetailScreen extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.navigation.state);
     this.getTodos();
   }
  
@@ -40,16 +39,15 @@ class ListDetailScreen extends Component {
     });
   }
 
-  toggleCheckBox = (todoId, completed) => {
-    this.socket.emit('toggle-todo', [{
-      id: todoId,
-      completed
-    }]);
-    this.socket.on('toggle-todo', () => {
+  toggleCheckBox = (id, currentCompletion) => {
+    const todoObj = { id, currentCompletion };
+    const completed = !currentCompletion; // if currently false, set to true & vice-versa
+    this.socket.emit('toggle-todo', { todoId: id, completed });
+    this.socket.on('toggle-todo', (updatedTodo) => {
       let { currentListTodos } = this.state;
       currentListTodos.forEach((todo) => {
-        if (todo._id === todoId) {
-          todo.completed = !completed; 
+        if (todo._id === updatedTodo._id) {
+          todo.completed = updatedTodo.completed;
         }
       });
       this.setState({ currentListTodos });
@@ -153,7 +151,7 @@ export default ListDetailScreen
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 32,
+    fontSize: 24,
     margin: 10,
   }, 
   titleAndBtn: {

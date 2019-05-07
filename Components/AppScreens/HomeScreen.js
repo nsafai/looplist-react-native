@@ -8,8 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import CustomText from '../CustomText';
-import { getData } from '../helpers/Requests';
-import { HOST_URL } from 'react-native-dotenv';
+import { getData, HOST_URL } from '../helpers/Requests';
+import { Button } from 'react-native-elements';
 import ListNameCell from './Components/ListNameCell';
 import { green, grey, lightGrey } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
@@ -114,12 +114,12 @@ class HomeScreen extends React.Component {
           </CustomText>
         </View>
         {this.renderLists()}
-        {/* <Button 
+        <Button 
           title="New List" 
           onPress={() => this.newList()}
           buttonStyle={styles.newListBtn}
-        /> */}
-        <View style={styles.newListBtnContainer}>
+        />
+        {/* <View style={styles.newListBtnContainer}>
           <Icon name="ios-add" size={30} color={grey} style={styles.plusIcon} />
           <CustomText 
             style={styles.newListBtn}
@@ -127,7 +127,7 @@ class HomeScreen extends React.Component {
           >
             New List
           </CustomText>
-        </View>
+        </View> */}
         <CustomText style={styles.appTitle}>looplist</CustomText>
       </ScrollView>
     );
@@ -170,23 +170,23 @@ const styles = StyleSheet.create({
   helperText: {
     padding: 30,
   },
-  // newListBtn: {
-  //   backgroundColor: green,
-  //   paddingVertical: 15,
-  // },
-  newListBtnContainer: {
-    margin: 26,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
   newListBtn: {
-    color: grey,
-    padding: 10,
-    fontSize: 18,
-    marginLeft: 10,
+    backgroundColor: green,
+    paddingVertical: 15,
   },
+  // newListBtnContainer: {
+  //   margin: 26,
+  //   display: 'flex',
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'flex-start',
+  // },
+  // newListBtn: {
+  //   color: grey,
+  //   padding: 10,
+  //   fontSize: 18,
+  //   marginLeft: 10,
+  // },
   logOut: {
     color: green,
     fontSize: 16,
