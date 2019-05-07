@@ -20,9 +20,6 @@ class HomeScreen extends React.Component {
 
   static navigationOptions = {
     title: 'My Lists',
-    headerTitleStyle: {
-      fontFamily: 'Symbol'
-    },
   };
 
   state = {
@@ -169,6 +166,7 @@ const styles = StyleSheet.create({
   },
   newListBtn: {
     backgroundColor: green,
+    paddingVertical: 15,
   },
   logOut: {
     color: green,

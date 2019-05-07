@@ -17,7 +17,7 @@ class ListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: '',
+      title: navigation.state.params.title || '',
     }
   }
 
@@ -111,12 +111,14 @@ class ListDetailScreen extends Component {
           />
         </View>
         {this.renderTodos()}
-        <TouchableOpacity onPress={() => this.deleteList(this.id)}>
-          <View style={styles.deleteListBtn}>
-            <CustomText style={styles.deleteTxt}>Delete List</CustomText>
-            <Icon name="ios-trash" size={20} color={grey} />
-          </View>
-        </TouchableOpacity>
+        <View style={styles.btnContainer}>
+          <TouchableOpacity onPress={() => this.deleteList(this.id)} width={100}>
+            <View style={styles.deleteListBtn}>
+              <CustomText style={styles.deleteTxt}>Delete List</CustomText>
+              <Icon name="ios-trash" size={30} color={grey} style={styles.trashBtn} />
+            </View>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     )
   }
@@ -146,18 +148,22 @@ const styles = StyleSheet.create({
   helperText: {
     padding: 30,
   },
+  btnContainer: {
+    width: 110,
+    height: 30,
+    marginTop: 100,
+    marginRight: 18,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
   deleteListBtn: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 42,
-    marginRight: 18,
-    color: grey,
   },
   deleteTxt: {
     marginRight: 10,
     color: grey,
     fontSize: 12,
-  }
+  },
 })

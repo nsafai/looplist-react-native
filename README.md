@@ -25,10 +25,12 @@ The [backend](https://github.com/nsafai/looplist) uses Node.js, Express.js, and 
     - [x] allow user to reset all todos
     
     - [ ] Stretch:
-      - [ ] Use [socket.io instead](https://hackernoon.com/a-simple-messaging-app-with-react-native-and-socket-io-e1cae3df7bda)
-      - [ ] fetch user to edit checklist title
+      - [x] Use [socket.io instead](https://hackernoon.com/a-simple-messaging-app-with-react-native-and-socket-io-e1cae3df7bda)
+      - [x] allow user to create new list
+      - [x] allow user to delete list
+      - [x] allow user to create new todo
+      - [ ] allow user to edit checklist title
       - [ ] allow user to edit todo
-      - [ ] allow user to create new todo
 
 ## How to run
 - Clone repo
