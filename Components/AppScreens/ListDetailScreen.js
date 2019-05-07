@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     height: 30,
     marginTop: 100,
     marginRight: 18,
+    marginBottom: 40,
     alignSelf: 'flex-end',
     alignItems: 'center',
   },

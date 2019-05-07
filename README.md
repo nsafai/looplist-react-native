@@ -31,6 +31,7 @@ The [backend](https://github.com/nsafai/looplist) uses Node.js, Express.js, and 
       - [x] allow user to create new todo
       - [ ] allow user to edit checklist title
       - [ ] allow user to edit todo
+      - [ ] add [swipe to delete](https://medium.com/@bdougie/adding-swipe-to-delete-in-react-native-cfa85a5f5a31)
 
 ## How to run
 - Clone repo
