@@ -7,6 +7,7 @@ import { HOST_URL } from '../helpers/Requests';
 import { green, grey } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { findIndex } from 'lodash';
 
 class ListDetailScreen extends Component {
   navState = this.props.navigation.state;
@@ -40,16 +41,15 @@ class ListDetailScreen extends Component {
   }
 
   toggleCheckBox = (id, currentCompletion) => {
-    const todoObj = { id, currentCompletion };
     const completed = !currentCompletion; // if currently false, set to true & vice-versa
     this.socket.emit('toggle-todo', { todoId: id, completed });
     this.socket.on('toggle-todo', (updatedTodo) => {
+      // Get array of todos from state, which we will update thereafter
       let { currentListTodos } = this.state;
-      currentListTodos.forEach((todo) => {
-        if (todo._id === updatedTodo._id) {
-          todo.completed = updatedTodo.completed;
-        }
-      });
+      // Find index of updatedTodo in currentListTodos by the _id field
+      const todoIndex = findIndex(currentListTodos, { _id: updatedTodo._id });
+      // Replace item at index using native splice
+      currentListTodos[todoIndex].completed = updatedTodo.completed;
       this.setState({ currentListTodos });
     })
   }
