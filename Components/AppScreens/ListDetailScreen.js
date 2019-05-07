@@ -57,11 +57,12 @@ class ListDetailScreen extends Component {
   resetTodos() {
     this.socket.emit('reset-all-todos', this.id);
     this.socket.on('reset-all-todos', () => {
+      // Get array of todos from state, which we will update thereafter
       let { currentListTodos } = this.state;
       currentListTodos.forEach((todo) => {
-        todo.completed = false;
+        todo.completed = false; // set completion status to false for all todos
       })
-      this.setState({ currentListTodos });
+      this.setState({ currentListTodos }); // Force re-render of todos
     });
   }
 
@@ -82,7 +83,7 @@ class ListDetailScreen extends Component {
       }
       if (!currentListTodos.includes(newTodo)) {
         currentListTodos.push(newTodo);
-        this.setState({ currentListTodos });
+        this.setState({ currentListTodos }); // Force re-render of todos
       }
     })
   }
