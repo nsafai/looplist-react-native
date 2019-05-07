@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import CustomText from '../CustomText';
 import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
 import { HOST_URL } from 'react-native-dotenv';
-import { green } from '../helpers/Colors';
+import { green, grey } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class ListDetailScreen extends Component {
   navState = this.props.navigation.state;
@@ -66,6 +67,13 @@ class ListDetailScreen extends Component {
     });
   }
 
+  deleteList() {
+    console.log("trying to delete list FOR REAL!");
+    this.socket.emit('delete-list', this.id);
+    // navigate back somehow
+    this.props.navigation.goBack();
+  }
+
   renderTodos() {
     const { currentListTodos } = this.state;
     if (currentListTodos === null) {
@@ -103,6 +111,12 @@ class ListDetailScreen extends Component {
           />
         </View>
         {this.renderTodos()}
+        <TouchableOpacity onPress={() => this.deleteList(this.id)}>
+          <View style={styles.deleteListBtn}>
+            <CustomText style={styles.deleteTxt}>Delete List</CustomText>
+            <Icon name="ios-trash" size={20} color={grey} />
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     )
   }
@@ -131,5 +145,19 @@ const styles = StyleSheet.create({
   },
   helperText: {
     padding: 30,
+  },
+  deleteListBtn: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 42,
+    marginRight: 18,
+    color: grey,
+  },
+  deleteTxt: {
+    marginRight: 10,
+    color: grey,
+    fontSize: 12,
   }
 })

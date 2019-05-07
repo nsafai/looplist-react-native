@@ -65,9 +65,6 @@ class HomeScreen extends React.Component {
     } else if (lists.length === 0) {
       return <CustomText style={styles.helperText}>You don't have any lists yet, add them on www.looplist.xyz</CustomText>;
     } else if (lists.length > 0) {
-      // lists = lists.map(list => { 
-      //   return { id:list._id, title: list.title }
-      // });
       return (
         <FlatList 
           style={styles.list}
