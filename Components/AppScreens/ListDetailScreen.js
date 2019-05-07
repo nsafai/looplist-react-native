@@ -1,103 +1,128 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import CustomText from '../CustomText';
 import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
-import { HOST_URL } from 'react-native-dotenv';
-import { getData, postData } from '../helpers/Requests';
-import { green } from '../helpers/Colors';
+import { HOST_URL } from '../helpers/Requests';
+import { green, grey } from '../helpers/Colors';
+import SocketIOClient from 'socket.io-client';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { findIndex } from 'lodash';
 
 class ListDetailScreen extends Component {
-  constructor(props) {
-    super(props);
-    const { state } = props.navigation;
-    this.id = state.params.id;
-    this.title = state.params.title;
-    this.todoComponents = [];
-    this.getTodos(this.id);
-  }
+  navState = this.props.navigation.state;
+  id = this.navState.params._id;
+  title = this.navState.params.title;
+  todoComponents = [];
+  socket = SocketIOClient(HOST_URL); // create socket.client instance and auto-connect to server
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: '',
+      title: navigation.state.params.title || '',
     }
   }
 
   state = {
-    currentListTodos: [],
+    currentListTodos: null,
   }
 
-  getTodos = (id) => {
-    if (id) {
-      const url = `https://loop-list.herokuapp.com/lists/${id}`;
-      getData(url)
-        .then(res => {
-          if(res.status >= 200 && res.status < 300) {
-            return res.json();
-          } else {
-            throw new Error("Server can't be reached!");
-          }
-        })
-        .then(json => {
-          const { currentListTodos } = json;
-          if (currentListTodos) {
-            this.setState({ currentListTodos });
-          }
-        })
-        .catch(err => console.log(err))
-    }
+  componentDidMount() {
+    this.getTodos();
+  }
+ 
+  getTodos() {
+    this.socket.emit('get-list', this.id);
+    this.socket.on('get-list', (res) => {
+      const { currentListTodos } = res;
+      if (currentListTodos) {
+        this.setState({ currentListTodos });
+      }
+    });
   }
 
-  toggleCheckBox = (todoId) => {
-    console.log(todoId);
-    const url = `https://loop-list.herokuapp.com/todos/toggle/${todoId}`;
-    // send post request to update todo
-    postData(url, {})
-      .then(res => res.json())
-      .then(json => {
-        if (json) {
-          this.getTodos(this.id);
-        }
+  toggleCheckBox = ({ todoId, currentCompletion }) => {
+    const newCompletion = !currentCompletion; // if currently false, set to true & vice-versa
+    this.socket.emit('toggle-todo', { todoId, completed: newCompletion });
+    // Get array of todos from state, which we will update thereafter
+    let { currentListTodos } = this.state;
+    // Find index of todo calling this method using '_id' field
+    const todoIndex = findIndex(currentListTodos, { _id: todoId });
+    // Optimistically update item
+    currentListTodos[todoIndex].completed = newCompletion;
+    // Optimistically force re-render (will undo in callback if necessary)
+    this.setState({ currentListTodos });
+    this.socket.on('toggle-todo', (updatedTodo) => {
+      // if for some reason, the response from server doesn't match frontend
+      if (updatedTodo.completed !== newCompletion) {
+        // Find index of updatedTodo from server response using '_id' field
+        const updatedTodoIndex = findIndex(currentListTodos, { _id: updatedTodo._id });
+        // update the value to match the response from server
+        currentListTodos[updatedTodoIndex].completed = updatedTodo.completed;
+        this.setState({ currentListTodos });
+      }
+    })
+  }
+
+  resetTodos() {
+    this.socket.emit('reset-all-todos', this.id);
+    this.socket.on('reset-all-todos', () => {
+      // Get array of todos from state, which we will update thereafter
+      let { currentListTodos } = this.state;
+      currentListTodos.forEach((todo) => {
+        todo.completed = false; // set completion status to false for all todos
       })
-      .catch(err => console.log(err))
+      this.setState({ currentListTodos }); // Force re-render of todos
+    });
+  }
+
+  deleteList() {
+    this.socket.emit('delete-list', this.id);
+    this.props.navigation.goBack();
+  }
+
+  addTodo() {
+    let { currentListTodos } = this.state;
+    this.socket.emit('create-todo', { 
+      currentListId: this.id, 
+      todoIndex: currentListTodos.length, // add to bottom
+    });
+    this.socket.on('create-todo', (newTodo) => {
+      if (currentListTodos === null) {
+        currentListTodos = [];
+      }
+      if (!currentListTodos.includes(newTodo)) {
+        currentListTodos.push(newTodo);
+        this.setState({ currentListTodos }); // Force re-render of todos
+      }
+    })
   }
 
   renderTodos() {
     const { currentListTodos } = this.state;
-    let todos = [];
-    currentListTodos.forEach((todo) => {
-      todos.push(
-        <Todo 
-          key={todo._id}
-          todoId={todo._id}
-          name={todo.name}
-          completed={todo.completed}
-          onPress={this.toggleCheckBox.bind(null, todo._id)}
-        />
-      );
-    });
-    if (todos.length > 1) {
-      return todos;
+    if (currentListTodos === null) {
+      return <ActivityIndicator size='large' />;
     } else {
-      return <ActivityIndicator />;
+      let todos = [];
+      currentListTodos.forEach((todo) => {
+        todos.push(
+          <Todo 
+            key={todo._id}
+            todoId={todo._id}
+            name={todo.name}
+            completed={todo.completed}
+            onPress={this.toggleCheckBox.bind(null, { 
+              todoId: todo._id, 
+              currentCompletion: todo.completed,
+            })}
+          />
+        );
+      });
+      if (todos.length === 0) {
+        return <CustomText style={styles.helperText}>You don't have any todos yet, add them on www.looplist.xyz</CustomText>;
+      } else if (todos.length > 0) {
+        return todos;
+      } 
     }
-  }
-
-  resetTodos(id) {
-    const url = `https://loop-list.herokuapp.com/lists/reset/${id}`;
-    postData(url)
-      .then(res => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
-      .then(json => {
-        const currentListTodos = json;
-        if (currentListTodos) {
-          this.setState({ currentListTodos });
-        }
-      })
-      .catch(err => console.log(err))
   }
   
   render() {
@@ -107,11 +132,28 @@ class ListDetailScreen extends Component {
           <CustomText style={styles.title}>{this.title}</CustomText>
           <Button 
             title="Reset All" 
-            onPress={() => this.resetTodos(this.id)}
+            onPress={() => this.resetTodos()}
             buttonStyle={styles.resetBtn}
           />
         </View>
         {this.renderTodos()}
+        <View style={styles.addItemBtnContainer}>
+          <Icon name="ios-add" size={30} color={grey} style={styles.plusIcon} />
+          <CustomText 
+            style={styles.addItemBtn}
+            onPress={() => this.addTodo()}
+          >
+            Add item
+          </CustomText>
+        </View>
+        <View style={styles.deleteBtnContainer}>
+          <TouchableOpacity onPress={() => this.deleteList(this.id)}>
+            <View style={styles.deleteListBtn}>
+              <CustomText style={styles.deleteTxt}>Delete List</CustomText>
+              <Icon name="ios-trash" size={30} color={grey} />
+            </View>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     )
   }
@@ -122,7 +164,8 @@ export default ListDetailScreen
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 32,
+    fontSize: 24,
+    margin: 10,
   }, 
   titleAndBtn: {
     display: 'flex',
@@ -130,14 +173,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    margin: 10,
     padding: 20,
   },
   resetBtn: {
     backgroundColor: green,
     width: 100,
+    margin: 10,
   },
   helperText: {
     padding: 30,
-  }
+  },
+  addItemBtnContainer: {
+    margin: 26,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  addItemBtn: {
+    color: grey,
+    padding: 10,
+    fontSize: 18,
+    marginLeft: 10,
+  },
+  deleteBtnContainer: {
+    width: 110,
+    height: 30,
+    marginTop: 100,
+    marginRight: 18,
+    marginBottom: 40,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  deleteListBtn: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  deleteTxt: {
+    marginRight: 10,
+    color: grey,
+    fontSize: 15,
+  },
 })

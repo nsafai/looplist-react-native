@@ -2,17 +2,14 @@ import React from 'react';
 import {
   AsyncStorage,
   View,
-  Button,
   ScrollView,
-  Text,
   TextInput,
 } from 'react-native';
 import { Button as StyledButton } from 'react-native-elements';
-import { postData } from '../helpers/Requests';
+import { postData, HOST_URL } from '../helpers/Requests';
 import styles from './styles/FormStyles';
 import { placeholder } from '../helpers/Colors';
 import CustomText from '../CustomText';
-import { HOST_URL } from 'react-native-dotenv';
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -113,12 +110,10 @@ class SignInScreen extends React.Component {
 
   pingServer = () => {
     const { email, password } = this.state;
-    console.log(HOST_URL);
-    const url = `https://loop-list.herokuapp.com/login`;
+    const url = HOST_URL + '/login';
 
     postData(url, { email, password })
       .then(res => {
-        console.log(res);
         if(res.status >= 200 && res.status < 300) {
           return res.json();
         } else {
@@ -132,7 +127,7 @@ class SignInScreen extends React.Component {
           }
 
           else if (json.user) {
-            AsyncStorage.setItem('userToken', json.user);
+            AsyncStorage.setItem('userId', json.user);
             AsyncStorage.setItem('sessionExpires', json.expires)
             this.props.navigation.navigate('App');
           }

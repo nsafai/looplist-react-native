@@ -3,15 +3,12 @@ import {
   AsyncStorage,
   ScrollView,
   View,
-  Button,
-  Text,
   TextInput,
 } from 'react-native';
 import { Button as StyledButton } from 'react-native-elements';
-import { postData } from '../helpers/Requests';
+import { postData, HOST_URL } from '../helpers/Requests';
 import styles from './styles/FormStyles';
 import CustomText from '../CustomText';
-import { HOST_URL } from 'react-native-dotenv';
 import { placeholder } from '../helpers/Colors';
  
 class SignUpScreen extends React.Component {
@@ -123,11 +120,10 @@ class SignUpScreen extends React.Component {
 
   pingServer = () => {
     const { name, email, password } = this.state;
-    const url = `https://loop-list.herokuapp.com/signup`;
+    const url = HOST_URL + '/signup';
 
     postData(url, { name, email, password })
       .then(res => {
-        console.log(res);
         if(res.status >= 200 && res.status < 300) {
           return res.json();
         }  else {
@@ -154,7 +150,7 @@ class SignUpScreen extends React.Component {
           }
 
           else if (json.user) {
-            AsyncStorage.setItem('userToken', json.user);
+            AsyncStorage.setItem('userId', json.user);
             AsyncStorage.setItem('sessionExpires', json.expires)
             this.props.navigation.navigate('App');
           }

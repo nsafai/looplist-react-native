@@ -32,4 +32,9 @@ const getData = async (url = ``, data = {}) => {
   return await response; // parses JSON response into native Javascript objects 
 }
 
-export {postData, getData };
+const LOCAL_URL = 'http://10.0.1.2:8080';
+const PROD_URL = 'https://loop-list.herokuapp.com';
+const SCHOOL_URL = 'http://172.30.6.164:19000';
+const HOST_URL = PROD_URL;
+
+export {postData, getData, HOST_URL };
