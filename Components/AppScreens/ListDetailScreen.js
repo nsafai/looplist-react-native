@@ -40,17 +40,26 @@ class ListDetailScreen extends Component {
     });
   }
 
-  toggleCheckBox = (id, currentCompletion) => {
-    const completed = !currentCompletion; // if currently false, set to true & vice-versa
-    this.socket.emit('toggle-todo', { todoId: id, completed });
+  toggleCheckBox = ({ todoId, currentCompletion }) => {
+    const newCompletion = !currentCompletion; // if currently false, set to true & vice-versa
+    this.socket.emit('toggle-todo', { todoId, completed: newCompletion });
+    // Get array of todos from state, which we will update thereafter
+    let { currentListTodos } = this.state;
+    // Find index of todo calling this method using '_id' field
+    const todoIndex = findIndex(currentListTodos, { _id: todoId });
+    // Optimistically update item
+    currentListTodos[todoIndex].completed = newCompletion;
+    // Optimistically force re-render (will undo in callback if necessary)
+    this.setState({ currentListTodos });
     this.socket.on('toggle-todo', (updatedTodo) => {
-      // Get array of todos from state, which we will update thereafter
-      let { currentListTodos } = this.state;
-      // Find index of updatedTodo in currentListTodos by the _id field
-      const todoIndex = findIndex(currentListTodos, { _id: updatedTodo._id });
-      // Replace item at index using native splice
-      currentListTodos[todoIndex].completed = updatedTodo.completed;
-      this.setState({ currentListTodos });
+      // if for some reason, the response from server doesn't match frontend
+      if (updatedTodo.completed !== newCompletion) {
+        // Find index of updatedTodo from server response using '_id' field
+        const updatedTodoIndex = findIndex(currentListTodos, { _id: updatedTodo._id });
+        // update the value to match the response from server
+        currentListTodos[updatedTodoIndex].completed = updatedTodo.completed;
+        this.setState({ currentListTodos });
+      }
     })
   }
 
@@ -101,7 +110,10 @@ class ListDetailScreen extends Component {
             todoId={todo._id}
             name={todo.name}
             completed={todo.completed}
-            onPress={this.toggleCheckBox.bind(null, todo._id, todo.completed)}
+            onPress={this.toggleCheckBox.bind(null, { 
+              todoId: todo._id, 
+              currentCompletion: todo.completed,
+            })}
           />
         );
       });
