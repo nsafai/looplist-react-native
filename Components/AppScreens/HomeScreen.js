@@ -11,9 +11,9 @@ import CustomText from '../CustomText';
 import { getData } from '../helpers/Requests';
 import { HOST_URL } from 'react-native-dotenv';
 import ListNameCell from './Components/ListNameCell';
-import { green, lightGrey } from '../helpers/Colors';
-import { Button } from 'react-native-elements';
+import { green, grey, lightGrey } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class HomeScreen extends React.Component {
   socket = SocketIOClient(HOST_URL); // create socket.client instance and auto-connect to server
@@ -114,11 +114,20 @@ class HomeScreen extends React.Component {
           </CustomText>
         </View>
         {this.renderLists()}
-        <Button 
+        {/* <Button 
           title="New List" 
           onPress={() => this.newList()}
           buttonStyle={styles.newListBtn}
-        />
+        /> */}
+        <View style={styles.newListBtnContainer}>
+          <Icon name="ios-add" size={30} color={grey} style={styles.plusIcon} />
+          <CustomText 
+            style={styles.newListBtn}
+            onPress={() => this.newList()}
+          >
+            New List
+          </CustomText>
+        </View>
         <CustomText style={styles.appTitle}>looplist</CustomText>
       </ScrollView>
     );
@@ -161,9 +170,22 @@ const styles = StyleSheet.create({
   helperText: {
     padding: 30,
   },
+  // newListBtn: {
+  //   backgroundColor: green,
+  //   paddingVertical: 15,
+  // },
+  newListBtnContainer: {
+    margin: 26,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
   newListBtn: {
-    backgroundColor: green,
-    paddingVertical: 15,
+    color: grey,
+    padding: 10,
+    fontSize: 18,
+    marginLeft: 10,
   },
   logOut: {
     color: green,
