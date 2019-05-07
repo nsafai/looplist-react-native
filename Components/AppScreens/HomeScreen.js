@@ -14,11 +14,22 @@ import { green } from '../helpers/Colors';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: '',
+    title: 'My Lists',
+    headerTitleStyle: {
+      fontFamily: 'Symbol'
+    },
   };
 
   state = {
-    lists: [],
+    lists: null,
+  }
+  
+  reFetch = this.props.navigation.addListener('willFocus', () => {
+    this.getLists();
+  });
+
+  componentWillUnMount() {
+    this.reFetch;
   }
 
   componentDidMount() {
@@ -26,8 +37,7 @@ class HomeScreen extends React.Component {
   }
 
   getLists = () => {
-    const url = `https://loop-list.herokuapp.com/lists`;
-    getData(url)
+    getData(HOST_URL + '/lists')
       .then(res => {
         console.log(res);
         if(res.status >= 200 && res.status < 300) {
@@ -48,11 +58,15 @@ class HomeScreen extends React.Component {
     const { lists } = this.state;
     const { navigate } = this.props.navigation; // to navigate to DetailScreen
 
-    if (lists.length > 0) {
+    if (lists === null) {
+      return <ActivityIndicator size='large' />;
+    } else if (lists.length === 0) {
+      return <CustomText style={styles.helperText}>You don't have any lists yet, add them on www.looplist.xyz</CustomText>;
+    } else if (lists.length > 0) {
       return (
         <FlatList 
           style={styles.list}
-          data={this.state.lists}
+          data={lists}
           renderItem={({item}) => (
             <ListNameCell 
               onPress={() => navigate('Detail', item)} 
@@ -64,9 +78,7 @@ class HomeScreen extends React.Component {
           className={styles.listsContainer}
         />
       )
-    } else {
-      return <CustomText style={styles.helperText}>You don't have any lists yet, add them on www.looplist.xyz</CustomText>;
-    }
+    } 
   }
 
   render() {

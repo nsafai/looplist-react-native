@@ -4,18 +4,17 @@ import CustomText from '../CustomText';
 import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
 import { HOST_URL } from 'react-native-dotenv';
-import { getData, postData } from '../helpers/Requests';
 import { green } from '../helpers/Colors';
+import SocketIOClient from 'socket.io-client';
 
 class ListDetailScreen extends Component {
-  constructor(props) {
-    super(props);
-    const { state } = props.navigation;
-    this.id = state.params.id;
-    this.title = state.params.title;
-    this.todoComponents = [];
-    this.getTodos(this.id);
-  }
+
+  navState = this.props.navigation.state;
+  id = this.navState.params.id;
+  title = this.navState.params.title;
+  todoComponents = [];
+  // Creating the socket-client instance will automatically connect to the server.
+  socket = SocketIOClient(HOST_URL);
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -24,80 +23,76 @@ class ListDetailScreen extends Component {
   }
 
   state = {
-    currentListTodos: [],
+    currentListTodos: null,
   }
 
-  getTodos = (id) => {
-    if (id) {
-      const url = `https://loop-list.herokuapp.com/lists/${id}`;
-      getData(url)
-        .then(res => {
-          if(res.status >= 200 && res.status < 300) {
-            return res.json();
-          } else {
-            throw new Error("Server can't be reached!");
-          }
-        })
-        .then(json => {
-          const { currentListTodos } = json;
-          if (currentListTodos) {
-            this.setState({ currentListTodos });
-          }
-        })
-        .catch(err => console.log(err))
-    }
+  componentDidMount() {
+    this.getTodos();
+  }
+ 
+  getTodos() {
+    this.socket.emit('get-list', this.id);
+    this.socket.on('get-list', (res) => {
+      const { currentListTodos } = res;
+      console.log("CURRENT LIST TODOS:")
+      console.log(currentListTodos);
+      if (currentListTodos) {
+        this.setState({ currentListTodos });
+      }
+    });
   }
 
-  toggleCheckBox = (todoId) => {
-    console.log(todoId);
-    const url = `https://loop-list.herokuapp.com/todos/toggle/${todoId}`;
-    // send post request to update todo
-    postData(url, {})
-      .then(res => res.json())
-      .then(json => {
-        if (json) {
-          this.getTodos(this.id);
+  toggleCheckBox = (todoId, completed) => {
+    console.log(todoId, completed);
+    this.socket.emit('toggle-todo', [{
+      id: todoId,
+      completed
+    }]);
+    this.socket.on('toggle-todo', () => {
+      let { currentListTodos } = this.state;
+      currentListTodos.forEach((todo) => {
+        if (todo._id === todoId) {
+          todo.completed = !completed; 
         }
+      });
+      this.setState({ currentListTodos });
+    })
+  }
+
+  resetTodos() {
+    this.socket.emit('reset-all-todos', this.id);
+    this.socket.on('reset-all-todos', () => {
+      let { currentListTodos } = this.state;
+      currentListTodos.forEach((todo) => {
+        todo.completed = false;
       })
-      .catch(err => console.log(err))
+      this.setState({ currentListTodos });
+    });
   }
 
   renderTodos() {
     const { currentListTodos } = this.state;
-    let todos = [];
-    currentListTodos.forEach((todo) => {
-      todos.push(
-        <Todo 
-          key={todo._id}
-          todoId={todo._id}
-          name={todo.name}
-          completed={todo.completed}
-          onPress={this.toggleCheckBox.bind(null, todo._id)}
-        />
-      );
-    });
-    if (todos.length > 1) {
-      return todos;
+    if (currentListTodos === null) {
+      return <ActivityIndicator size='large' />;
     } else {
-      return <ActivityIndicator />;
+      let todos = [];
+      currentListTodos.forEach((todo) => {
+        todos.push(
+          <Todo 
+            key={todo._id}
+            todoId={todo._id}
+            name={todo.name}
+            completed={todo.completed}
+            onPress={this.toggleCheckBox.bind(null, todo._id, todo.completed)}
+          />
+        );
+      });
+      if (todos.length === 0) {
+        return <CustomText style={styles.helperText}>You don't have any todos yet, add them on www.looplist.xyz</CustomText>;
+      } else if (todos.length > 0) {
+        return todos;
+      } 
     }
-  }
-
-  resetTodos(id) {
-    const url = `https://loop-list.herokuapp.com/lists/reset/${id}`;
-    postData(url)
-      .then(res => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
-      .then(json => {
-        const currentListTodos = json;
-        if (currentListTodos) {
-          this.setState({ currentListTodos });
-        }
-      })
-      .catch(err => console.log(err))
   }
   
   render() {
@@ -107,7 +102,7 @@ class ListDetailScreen extends Component {
           <CustomText style={styles.title}>{this.title}</CustomText>
           <Button 
             title="Reset All" 
-            onPress={() => this.resetTodos(this.id)}
+            onPress={() => this.resetTodos()}
             buttonStyle={styles.resetBtn}
           />
         </View>

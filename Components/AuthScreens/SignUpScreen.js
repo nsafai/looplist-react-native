@@ -3,8 +3,6 @@ import {
   AsyncStorage,
   ScrollView,
   View,
-  Button,
-  Text,
   TextInput,
 } from 'react-native';
 import { Button as StyledButton } from 'react-native-elements';
@@ -154,7 +152,7 @@ class SignUpScreen extends React.Component {
           }
 
           else if (json.user) {
-            AsyncStorage.setItem('userToken', json.user);
+            AsyncStorage.setItem('userId', json.user);
             AsyncStorage.setItem('sessionExpires', json.expires)
             this.props.navigation.navigate('App');
           }
