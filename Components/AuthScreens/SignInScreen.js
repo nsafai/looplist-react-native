@@ -111,12 +111,10 @@ class SignInScreen extends React.Component {
 
   pingServer = () => {
     const { email, password } = this.state;
-    console.log(HOST_URL);
     const url = `https://loop-list.herokuapp.com/login`;
 
     postData(url, { email, password })
       .then(res => {
-        console.log(res);
         if(res.status >= 200 && res.status < 300) {
           return res.json();
         } else {

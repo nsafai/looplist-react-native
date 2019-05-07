@@ -4,15 +4,20 @@ import {
   ScrollView,
   StyleSheet,
   FlatList,
+  View,
   ActivityIndicator,
 } from 'react-native';
 import CustomText from '../CustomText';
 import { getData } from '../helpers/Requests';
 import { HOST_URL } from 'react-native-dotenv';
 import ListNameCell from './Components/ListNameCell';
-import { green } from '../helpers/Colors';
+import { green, lightGrey } from '../helpers/Colors';
+import { Button } from 'react-native-elements';
+import SocketIOClient from 'socket.io-client';
 
 class HomeScreen extends React.Component {
+  socket = SocketIOClient(HOST_URL); // create socket.client instance and auto-connect to server
+
   static navigationOptions = {
     title: 'My Lists',
     headerTitleStyle: {
@@ -23,7 +28,7 @@ class HomeScreen extends React.Component {
   state = {
     lists: null,
   }
-  
+
   reFetch = this.props.navigation.addListener('willFocus', () => {
     this.getLists();
   });
@@ -39,7 +44,6 @@ class HomeScreen extends React.Component {
   getLists = () => {
     getData(HOST_URL + '/lists')
       .then(res => {
-        console.log(res);
         if(res.status >= 200 && res.status < 300) {
           return res.json();
         } else {
@@ -47,29 +51,30 @@ class HomeScreen extends React.Component {
         }
       })
       .then(json => {
-        jsonLists = json.lists;
-        lists = jsonLists.map(list => { return { id:list._id, title: list.title, todos: list.todoItems } });
+        lists = json.lists;
         this.setState({ lists });
       })
       .catch(err => console.log(err.message))
   }
 
   renderLists() {
-    const { lists } = this.state;
-    const { navigate } = this.props.navigation; // to navigate to DetailScreen
+    let { lists } = this.state;
 
     if (lists === null) {
       return <ActivityIndicator size='large' />;
     } else if (lists.length === 0) {
       return <CustomText style={styles.helperText}>You don't have any lists yet, add them on www.looplist.xyz</CustomText>;
     } else if (lists.length > 0) {
+      // lists = lists.map(list => { 
+      //   return { id:list._id, title: list.title }
+      // });
       return (
         <FlatList 
           style={styles.list}
           data={lists}
           renderItem={({item}) => (
             <ListNameCell 
-              onPress={() => navigate('Detail', item)} 
+              onPress={() => this.navigateDetail(item)} 
               list={item}
               style={styles.listNameCell}
             />
@@ -81,20 +86,49 @@ class HomeScreen extends React.Component {
     } 
   }
 
+  navigateDetail(item) {
+    const { navigate } = this.props.navigation; // to navigate to DetailScreen
+    navigate('Detail', item)
+  }
+  
+  newList = async () => {
+    const userId = await AsyncStorage.getItem('userId');
+    this.socket.emit('new-list', userId);
+    this.socket.on('new-list', (res) => {
+      console.log(res);
+      let { lists } = this.state;
+      if (!lists.includes(res)) {
+        const newList = res;
+        lists.unshift(newList); // add newList to beginning of lists as it should be on top
+        this.setState({ lists }); // update state to re-render lists
+        // navigate to new list
+        this.navigateDetail(newList);
+      }
+    });
+  }
+
   render() {
     return (
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.wrapper}
       >
-        <CustomText style={styles.title}>My Lists</CustomText>
+        <View style={styles.titleAndBtn}>
+          <CustomText style={styles.title}>My Lists</CustomText>
+          <CustomText 
+            style={styles.logOut}
+            onPress={this._signOutAsync}
+          >
+            Logout
+          </CustomText>
+        </View>
         {this.renderLists()}
-        <CustomText 
-          style={styles.logOut}
-          onPress={this._signOutAsync}
-        >
-          Logout
-        </CustomText>
+        <Button 
+          title="New List" 
+          onPress={() => this.newList()}
+          buttonStyle={styles.newListBtn}
+        />
+        <CustomText style={styles.appTitle}>looplist</CustomText>
       </ScrollView>
     );
   }
@@ -111,15 +145,20 @@ const styles = StyleSheet.create({
   wrapper: {
     display: 'flex',
     justifyContent: 'space-between',
-    // alignItems: 'center',
-    // alignSelf: 'stretch',
-    // textAlign: 'center',
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    padding: 30,
+    margin: 10,
     textAlign: 'left',
+  },
+  titleAndBtn: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    padding: 20,
   },
   listsContainer: {
     margin: 0,
@@ -128,13 +167,23 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     textAlign: 'center',
   },
+  helperText: {
+    padding: 30,
+  },
+  newListBtn: {
+    backgroundColor: green,
+  },
   logOut: {
-    marginTop: 30,
     color: green,
     fontSize: 16,
     textAlign: 'center',
+    margin: 10,
   },
-  helperText: {
-    padding: 30,
+  appTitle: {
+    marginTop: 100,
+    marginBottom: 60,
+    textAlign: 'center',
+    fontSize: 24,
+    color: lightGrey,
   }
 });

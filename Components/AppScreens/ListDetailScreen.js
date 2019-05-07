@@ -8,13 +8,11 @@ import { green } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
 
 class ListDetailScreen extends Component {
-
   navState = this.props.navigation.state;
-  id = this.navState.params.id;
+  id = this.navState.params._id;
   title = this.navState.params.title;
   todoComponents = [];
-  // Creating the socket-client instance will automatically connect to the server.
-  socket = SocketIOClient(HOST_URL);
+  socket = SocketIOClient(HOST_URL); // create socket.client instance and auto-connect to server
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -27,6 +25,7 @@ class ListDetailScreen extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.navigation.state);
     this.getTodos();
   }
  
@@ -34,8 +33,6 @@ class ListDetailScreen extends Component {
     this.socket.emit('get-list', this.id);
     this.socket.on('get-list', (res) => {
       const { currentListTodos } = res;
-      console.log("CURRENT LIST TODOS:")
-      console.log(currentListTodos);
       if (currentListTodos) {
         this.setState({ currentListTodos });
       }
@@ -43,7 +40,6 @@ class ListDetailScreen extends Component {
   }
 
   toggleCheckBox = (todoId, completed) => {
-    console.log(todoId, completed);
     this.socket.emit('toggle-todo', [{
       id: todoId,
       completed
@@ -118,6 +114,7 @@ export default ListDetailScreen
 const styles = StyleSheet.create({
   title: {
     fontSize: 32,
+    margin: 10,
   }, 
   titleAndBtn: {
     display: 'flex',
@@ -125,12 +122,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    margin: 10,
     padding: 20,
   },
   resetBtn: {
     backgroundColor: green,
     width: 100,
+    margin: 10,
   },
   helperText: {
     padding: 30,

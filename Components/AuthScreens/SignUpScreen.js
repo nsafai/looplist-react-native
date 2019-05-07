@@ -125,7 +125,6 @@ class SignUpScreen extends React.Component {
 
     postData(url, { name, email, password })
       .then(res => {
-        console.log(res);
         if(res.status >= 200 && res.status < 300) {
           return res.json();
         }  else {
