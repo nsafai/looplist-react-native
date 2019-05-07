@@ -68,10 +68,25 @@ class ListDetailScreen extends Component {
   }
 
   deleteList() {
-    console.log("trying to delete list FOR REAL!");
     this.socket.emit('delete-list', this.id);
-    // navigate back somehow
     this.props.navigation.goBack();
+  }
+
+  addTodo() {
+    let { currentListTodos } = this.state;
+    this.socket.emit('create-todo', { 
+      currentListId: this.id, 
+      todoIndex: currentListTodos.length, // add to bottom
+    });
+    this.socket.on('create-todo', (newTodo) => {
+      if (currentListTodos === null) {
+        currentListTodos = [];
+      }
+      if (!currentListTodos.includes(newTodo)) {
+        currentListTodos.push(newTodo);
+        this.setState({ currentListTodos });
+      }
+    })
   }
 
   renderTodos() {
@@ -111,11 +126,20 @@ class ListDetailScreen extends Component {
           />
         </View>
         {this.renderTodos()}
-        <View style={styles.btnContainer}>
-          <TouchableOpacity onPress={() => this.deleteList(this.id)} width={100}>
+        <View style={styles.addItemBtnContainer}>
+          <Icon name="ios-add" size={30} color={grey} style={styles.plusIcon} />
+          <CustomText 
+            style={styles.addItemBtn}
+            onPress={() => this.addTodo()}
+          >
+            Add item
+          </CustomText>
+        </View>
+        <View style={styles.deleteBtnContainer}>
+          <TouchableOpacity onPress={() => this.deleteList(this.id)}>
             <View style={styles.deleteListBtn}>
               <CustomText style={styles.deleteTxt}>Delete List</CustomText>
-              <Icon name="ios-trash" size={30} color={grey} style={styles.trashBtn} />
+              <Icon name="ios-trash" size={30} color={grey} />
             </View>
           </TouchableOpacity>
         </View>
@@ -148,7 +172,20 @@ const styles = StyleSheet.create({
   helperText: {
     padding: 30,
   },
-  btnContainer: {
+  addItemBtnContainer: {
+    margin: 26,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  addItemBtn: {
+    color: grey,
+    padding: 10,
+    fontSize: 18,
+    marginLeft: 10,
+  },
+  deleteBtnContainer: {
     width: 110,
     height: 30,
     marginTop: 100,
@@ -164,6 +201,6 @@ const styles = StyleSheet.create({
   deleteTxt: {
     marginRight: 10,
     color: grey,
-    fontSize: 12,
+    fontSize: 15,
   },
 })

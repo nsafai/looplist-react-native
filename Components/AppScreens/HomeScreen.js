@@ -88,15 +88,12 @@ class HomeScreen extends React.Component {
   newList = async () => {
     const userId = await AsyncStorage.getItem('userId');
     this.socket.emit('new-list', userId);
-    this.socket.on('new-list', (res) => {
-      console.log(res);
+    this.socket.on('new-list', (newList) => {
       let { lists } = this.state;
-      if (!lists.includes(res)) {
-        const newList = res;
+      if (!lists.includes(newList)) {
         lists.unshift(newList); // add newList to beginning of lists as it should be on top
         this.setState({ lists }); // update state to re-render lists
-        // navigate to new list
-        this.navigateDetail(newList);
+        this.navigateDetail(newList); // navigate to new list
       }
     });
   }
