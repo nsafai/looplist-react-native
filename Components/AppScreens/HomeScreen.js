@@ -13,7 +13,8 @@ import { Button } from 'react-native-elements';
 import ListNameCell from './Components/ListNameCell';
 import { green, grey, lightGrey } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
-import Icon from 'react-native-vector-icons/Ionicons';
+import move from 'lodash-move';
+import { findIndex } from 'lodash';
 
 class HomeScreen extends React.Component {
   socket = SocketIOClient(HOST_URL); // create socket.client instance and auto-connect to server
@@ -27,7 +28,8 @@ class HomeScreen extends React.Component {
   }
 
   reFetch = this.props.navigation.addListener('willFocus', () => {
-    this.getLists();
+    this.getLists(); // just in case something has changed on another device
+    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true }); // scroll to top
   });
 
   componentWillUnMount() {
@@ -68,7 +70,7 @@ class HomeScreen extends React.Component {
           data={lists}
           renderItem={({item}) => (
             <ListNameCell 
-              onPress={() => this.navigateDetail(item)} 
+              onPress={() => this.navigateDetail(item)}
               list={item}
               style={styles.listNameCell}
             />
@@ -82,7 +84,14 @@ class HomeScreen extends React.Component {
 
   navigateDetail(item) {
     const { navigate } = this.props.navigation; // to navigate to DetailScreen
-    navigate('Detail', item)
+    navigate('Detail', item); // navigate to List Details
+    let { lists } = this.state; 
+    // get index of currentList from lists in state
+    const listIndex = findIndex(lists, { _id: item._id });
+    // move listname to top of list before navigating away
+    const newLists = move(lists, listIndex, 0);
+    // update current view before navigating away instead of on goBack()
+    this.setState({ lists: newLists });
   }
   
   newList = async () => {
@@ -103,6 +112,7 @@ class HomeScreen extends React.Component {
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.wrapper}
+        ref='_scrollView'
       >
         <View style={styles.titleAndBtn}>
           <CustomText style={styles.title}>My Lists</CustomText>
