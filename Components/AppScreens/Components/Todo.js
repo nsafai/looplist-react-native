@@ -21,6 +21,12 @@ class Todo extends Component {
     })
   }
 
+  componentWillReceiveProps() {
+    this.setState({
+      completed: this.props.completed,
+    })
+  }
+
   saveTodo(newName) {
     this.setState({ todoName: newName })
     const { todoId, todoIndex } = this.props;
