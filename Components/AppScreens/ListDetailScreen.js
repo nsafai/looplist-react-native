@@ -85,7 +85,8 @@ class ListDetailScreen extends Component {
           <Todo 
             key={todo._id}
             todoId={todo._id}
-            name={todo.name}
+            todoName={todo.name}
+            todoIndex={todo.index}
             completed={todo.completed}
           />
         );

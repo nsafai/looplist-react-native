@@ -10,14 +10,23 @@ class Todo extends Component {
   socket = SocketIOClient(HOST_URL); // create socket.client instance and auto-connect to server
 
   state = {
-    name: this.props.name,
-    completed: this.props.completed,
+    todoName: '',
+    completed: false,
   }
 
-  saveTodo() {
-    socket.emit('save-todo', {
+  componentDidMount() {
+    this.setState({
+      todoName: this.props.todoName,
+      completed: this.props.completed,
+    })
+  }
+
+  saveTodo(newName) {
+    this.setState({ todoName: newName })
+    const { todoId, todoIndex } = this.props;
+    this.socket.emit('save-todo', {
       todoId,
-      todoInputValue,
+      todoInputValue: newName,
       todoIndex,
     })
   }
@@ -54,8 +63,8 @@ class Todo extends Component {
         />
         <TextInput
           style={styles.text}
-          onChangeText={(text) => this.setState({ name: text })}
-          value={this.state.name}
+          onChangeText={(text) => this.saveTodo(text)}
+          value={this.state.todoName}
         />
       </View>
     );
