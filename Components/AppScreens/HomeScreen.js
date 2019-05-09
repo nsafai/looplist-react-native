@@ -129,7 +129,7 @@ class HomeScreen extends React.Component {
           onPress={() => this.newList()}
           buttonStyle={styles.newListBtn}
         />
-        <CustomText style={styles.appTitle}>looplist</CustomText>
+        <CustomText style={styles.appTitle}>loop list</CustomText>
       </ScrollView>
     );
   }

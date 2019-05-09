@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     fontSize: 16,
     width: '100%',
+    justifyContent: 'center'
   },
   checkbox: {
     marginLeft: 40,

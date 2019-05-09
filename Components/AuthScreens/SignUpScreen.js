@@ -54,7 +54,7 @@ class SignUpScreen extends React.Component {
         keyboardShouldPersistTaps='handled'
         contentContainerStyle={styles.wrapper}
       >
-        <CustomText style={styles.appTitle}>looplist</CustomText>
+        <CustomText style={styles.appTitle}>loop list</CustomText>
         <View style={styles.loginForm}>
           <TextInput
             onChangeText={(text) => this.onChangeText(text, 'name')}

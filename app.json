@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "React-Native-Tabs",
-    "slug": "react-native-tabs",
+    "name": "loop-list",
+    "slug": "loop-list",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -11,6 +11,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "description": "Easily re-usable lists, for things like packing lists.",
+    "version": "0.1.0",
+    "orientation": "portrait",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -23,7 +26,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nicolai.looplist"
+    },
+    "android": {
+			"package": "com.nicolai.looplist"
+		}
   }
 }
