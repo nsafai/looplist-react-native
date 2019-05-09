@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
 import { HOST_URL } from '../helpers/Requests';
 import SocketIOClient from 'socket.io-client';
-import { View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { 
+  View, 
+  ScrollView, 
+  ActivityIndicator, 
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import CustomText from '../CustomText';
 import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
@@ -18,16 +24,20 @@ class ListDetailScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.state.params.title || '',
+      title: '',
     }
   }
 
   state = {
+    title: '',
     currentListTodos: null,
   }
 
   componentDidMount() {
     this.getTodos();
+    this.setState({
+      title: this.title,
+    })
   }
  
   getTodos() {
@@ -59,6 +69,14 @@ class ListDetailScreen extends Component {
         currentListTodos.push(newTodo);
         this.setState({ currentListTodos }); // Force re-render of todos
       }
+    })
+  }
+
+  saveListName(newListName) {
+    this.setState({ title: newListName })
+    this.socket.emit('save-list-name', {
+      currentListId: this.id,
+      newListName,
     })
   }
 
@@ -103,7 +121,14 @@ class ListDetailScreen extends Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.titleAndBtn}>
-          <CustomText style={styles.title}>{this.title}</CustomText>
+          {/* <CustomText style={styles.title}>{this.title}</CustomText> */}
+          <TextInput
+            style={styles.title}
+            onChangeText={(text) => this.saveListName(text)}
+            value={this.state.title}
+            multiline
+          />
+          {/* saveListName(newListName) */}
           <Button 
             title="Reset All" 
             onPress={() => this.resetTodos()}

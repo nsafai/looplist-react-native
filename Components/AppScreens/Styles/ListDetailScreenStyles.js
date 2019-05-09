@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     margin: 10,
+    width: '100%',
   }, 
   titleAndBtn: {
     display: 'flex',
