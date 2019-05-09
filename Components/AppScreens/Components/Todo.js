@@ -1,15 +1,44 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput } from 'react-native';
 import { CheckBox } from 'react-native-elements'
 import { green } from '../../helpers/Colors';
+import { findIndex } from 'lodash';
+import { HOST_URL } from '../../helpers/Requests';
+import SocketIOClient from 'socket.io-client';
 
 class Todo extends Component {
+  socket = SocketIOClient(HOST_URL); // create socket.client instance and auto-connect to server
+
   state = {
-    text: this.props.name,
+    name: this.props.name,
+    completed: this.props.completed,
+  }
+
+  saveTodo() {
+    socket.emit('save-todo', {
+      todoId,
+      todoInputValue,
+      todoIndex,
+    })
+  }
+
+  toggleCheckBox = ({ todoId, completed }) => {
+    const newCompletion = !completed; // if currently false, set to true & vice-versa
+    this.socket.emit('toggle-todo', { todoId, completed: newCompletion });
+    // Optimistically force re-render (will undo in callback if necessary)
+    this.setState({ completed: newCompletion });
+    this.socket.on('toggle-todo', (updatedTodo) => {
+      // if for some reason, the response from server doesn't match frontend
+      if (updatedTodo.completed !== newCompletion) {
+        // update the value to match the response from server
+        this.setState({ completed: updatedTodo.completed });
+      }
+    })
   }
 
   render() {
-    const { todoId, name, completed, onPress } = this.props;
+    const { todoId } = this.props;
+    const { completed } = this.state;
     
     return (
       <View style={styles.cell} >
@@ -19,16 +48,15 @@ class Todo extends Component {
           uncheckedIcon='circle'
           checked={completed}
           checkedColor={green}
-          onPress={onPress}
           data-todoId={todoId}
           size={30}
+          onPress={() => this.toggleCheckBox({ todoId, completed })}
         />
         <TextInput
           style={styles.text}
-          onChangeText={(text) => this.setState({text})}
-          value={this.state.text}
+          onChangeText={(text) => this.setState({ name: text })}
+          value={this.state.name}
         />
-        {/* <Text style={styles.text}>{name}</Text> */}
       </View>
     );
   }
