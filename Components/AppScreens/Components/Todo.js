@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
 import { CheckBox } from 'react-native-elements'
+import { green } from '../../helpers/Colors';
 
 class Todo extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    text: this.props.name,
   }
 
   render() {
@@ -17,12 +18,17 @@ class Todo extends Component {
           checkedIcon='check-circle'
           uncheckedIcon='circle'
           checked={completed}
-          checkedColor={'#28a745'}
+          checkedColor={green}
           onPress={onPress}
           data-todoId={todoId}
           size={30}
         />
-        <Text style={styles.text}>{name}</Text>
+        <TextInput
+          style={styles.text}
+          onChangeText={(text) => this.setState({text})}
+          value={this.state.text}
+        />
+        {/* <Text style={styles.text}>{name}</Text> */}
       </View>
     );
   }
@@ -38,10 +44,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
+    minHeight: 60,
   },
   text:{
-    margin: 10,
-    fontSize: 16
+    paddingVertical: 25,
+    fontSize: 16,
+    width: '100%',
   },
   checkbox: {
     marginLeft: 40,

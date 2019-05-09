@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 
 class CustomText extends Component {
@@ -29,10 +29,18 @@ class CustomText extends Component {
     const allProps = Object.assign({}, this.props, {style:style})
     if (this.state.fontLoaded) {
       return <Text {...allProps}>{this.props.children}</Text>;
-    } else {
-      return <ActivityIndicator size='large' />;
+    } 
+    
+    else {
+      return <Text style={styles.stilLoadingPlaceholder}></Text>;
     }
   }
 }
 
 export default CustomText;
+
+const styles = StyleSheet.create({
+    stilLoadingPlaceholder: {
+      margin: 10,
+    }
+})

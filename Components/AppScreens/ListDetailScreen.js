@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import CustomText from '../CustomText';
 import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
 import { HOST_URL } from '../helpers/Requests';
-import { green, grey } from '../helpers/Colors';
+import { grey } from '../helpers/Colors';
 import SocketIOClient from 'socket.io-client';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { findIndex } from 'lodash';
+import styles from './Styles/ListDetailScreenStyles';
 
 class ListDetailScreen extends Component {
   navState = this.props.navigation.state;
@@ -40,6 +41,11 @@ class ListDetailScreen extends Component {
     });
   }
 
+  deleteList() {
+    this.socket.emit('delete-list', this.id);
+    this.props.navigation.goBack();
+  }
+
   toggleCheckBox = ({ todoId, currentCompletion }) => {
     const newCompletion = !currentCompletion; // if currently false, set to true & vice-versa
     this.socket.emit('toggle-todo', { todoId, completed: newCompletion });
@@ -63,23 +69,6 @@ class ListDetailScreen extends Component {
     })
   }
 
-  resetTodos() {
-    this.socket.emit('reset-all-todos', this.id);
-    this.socket.on('reset-all-todos', () => {
-      // Get array of todos from state, which we will update thereafter
-      let { currentListTodos } = this.state;
-      currentListTodos.forEach((todo) => {
-        todo.completed = false; // set completion status to false for all todos
-      })
-      this.setState({ currentListTodos }); // Force re-render of todos
-    });
-  }
-
-  deleteList() {
-    this.socket.emit('delete-list', this.id);
-    this.props.navigation.goBack();
-  }
-
   addTodo() {
     let { currentListTodos } = this.state;
     this.socket.emit('create-todo', { 
@@ -95,6 +84,27 @@ class ListDetailScreen extends Component {
         this.setState({ currentListTodos }); // Force re-render of todos
       }
     })
+  }
+
+  saveTodo() {
+    
+    socket.emit('save-todo', {
+      todoId,
+      todoInputValue,
+      todoIndex,
+    })
+  }
+
+  resetTodos() {
+    this.socket.emit('reset-all-todos', this.id);
+    this.socket.on('reset-all-todos', () => {
+      // Get array of todos from state, which we will update thereafter
+      let { currentListTodos } = this.state;
+      currentListTodos.forEach((todo) => {
+        todo.completed = false; // set completion status to false for all todos
+      })
+      this.setState({ currentListTodos }); // Force re-render of todos
+    });
   }
 
   renderTodos() {
@@ -118,7 +128,7 @@ class ListDetailScreen extends Component {
         );
       });
       if (todos.length === 0) {
-        return <CustomText style={styles.helperText}>You don't have any todos yet, add them on www.looplist.xyz</CustomText>;
+        return <CustomText style={styles.helperText}>You don't have any list items yet.</CustomText>;
       } else if (todos.length > 0) {
         return todos;
       } 
@@ -138,7 +148,7 @@ class ListDetailScreen extends Component {
         </View>
         {this.renderTodos()}
         <View style={styles.addItemBtnContainer}>
-          <Icon name="ios-add" size={30} color={grey} style={styles.plusIcon} />
+          <Icon name="ios-add" size={30} color={grey} style={styles.plusIcon} onPress={() => this.addTodo()} />
           <CustomText 
             style={styles.addItemBtn}
             onPress={() => this.addTodo()}
@@ -160,59 +170,3 @@ class ListDetailScreen extends Component {
 }
 
 export default ListDetailScreen
-
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    margin: 10,
-  }, 
-  titleAndBtn: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    padding: 20,
-  },
-  resetBtn: {
-    backgroundColor: green,
-    width: 100,
-    margin: 10,
-  },
-  helperText: {
-    padding: 30,
-  },
-  addItemBtnContainer: {
-    margin: 26,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  addItemBtn: {
-    color: grey,
-    padding: 10,
-    fontSize: 18,
-    marginLeft: 10,
-  },
-  deleteBtnContainer: {
-    width: 110,
-    height: 30,
-    marginTop: 100,
-    marginRight: 18,
-    marginBottom: 40,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  deleteListBtn: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  deleteTxt: {
-    marginRight: 10,
-    color: grey,
-    fontSize: 15,
-  },
-})
