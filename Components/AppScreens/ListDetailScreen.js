@@ -84,8 +84,9 @@ class ListDetailScreen extends Component {
     this.socket.emit('reset-all-todos', this.id);
     let { currentListTodos } = this.state; // get current state of todos
 
-    previousState = currentListTodos; // keep track of previous state incase we receive an error
-    
+    // keep track of previous state incase we receive an error
+    previousState = JSON.parse(JSON.stringify([...currentListTodos]));
+
     // Optimistically update the frontend
     currentListTodos.forEach((todo) => {
       todo.completed = false; // set completion status to false for all todos
