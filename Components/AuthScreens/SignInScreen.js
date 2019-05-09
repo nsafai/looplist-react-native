@@ -12,6 +12,9 @@ import { placeholder } from '../helpers/Colors';
 import CustomText from '../CustomText';
 
 class SignInScreen extends React.Component {
+  placeholderEmail = 'Email address';
+  placeholderPassword ='Enter your password';
+
   static navigationOptions = {
     title: 'Sign In',
   };
@@ -19,8 +22,6 @@ class SignInScreen extends React.Component {
   state = { 
     email: '',
     password: '',
-    placeholderEmail: 'Email address',
-    placeholderPassword: 'Enter your password',
     errors: [],
     showHelperText: false,
   };
@@ -37,52 +38,6 @@ class SignInScreen extends React.Component {
       </CustomText>
       )
     }
-  }
-
-  render() {
-    return (
-      <ScrollView 
-        keyboardShouldPersistTaps='handled'
-        contentContainerStyle={styles.wrapper}
-      >
-        <CustomText style={styles.appTitle}>loop list</CustomText>
-        <View style={styles.loginForm}>
-          <TextInput
-            onChangeText={(text) => this.onChangeText(text, 'email')}
-            value={this.state.email}
-            placeholder={this.state.placeholderEmail}
-            placeholderTextColor={placeholder}
-            style={styles.inputField}
-            autoCapitalize='none'
-            keyboardType='email-address'
-          />
-          <TextInput
-            onChangeText={(text) => this.onChangeText(text, 'password')}
-            value={this.state.password}
-            placeholder={this.state.placeholderPassword}
-            placeholderTextColor={placeholder}
-            secureTextEntry={true}
-            style={styles.inputField}
-            autoCapitalize = 'none'
-          />
-        </View>
-        {this.renderHelperText()}
-        <StyledButton 
-          title="Sign in" 
-          onPress={this.pingServer} 
-          buttonStyle={styles.ctaBtn}
-        />
-        <View style={styles.otherOption}>
-          <CustomText style={styles.otherOptionText}>Don't have an account?</CustomText>
-          <CustomText 
-            onPress={this.signUp}
-            style={styles.otherBtn}
-          >
-            Signup
-          </CustomText>
-        </View>
-      </ScrollView>
-    );
   }
 
   onChangeText(text, fieldName) {
@@ -114,6 +69,7 @@ class SignInScreen extends React.Component {
 
     postData(url, { email, password })
       .then(res => {
+        console.log(res);
         if(res.status >= 200 && res.status < 300) {
           return res.json();
         } else {
@@ -122,7 +78,7 @@ class SignInScreen extends React.Component {
       })
       .then(json => {
         if (json) {
-          if (json.status == 401) {
+          if (json.status === 401 || json.status === 403) {
             this.showError('Email and/or password are incorrect');
           }
 
@@ -137,6 +93,54 @@ class SignInScreen extends React.Component {
         console.log(err);
         this.showError(`Can\'t reach server. ${err.message}.`);
       })
+  }
+
+  render() {
+    const { placeholderEmail, placeholderPassword } = this;
+    console.log(placeholderEmail);
+    return (
+      <ScrollView 
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={styles.wrapper}
+      >
+        <CustomText style={styles.appTitle}>loop list</CustomText>
+        <View style={styles.loginForm}>
+          <TextInput
+            onChangeText={(text) => this.onChangeText(text, 'email')}
+            value={this.state.email}
+            placeholder={placeholderEmail}
+            placeholderTextColor={placeholder}
+            style={styles.inputField}
+            autoCapitalize='none'
+            keyboardType='email-address'
+          />
+          <TextInput
+            onChangeText={(text) => this.onChangeText(text, 'password')}
+            value={this.state.password}
+            placeholder={placeholderPassword}
+            placeholderTextColor={placeholder}
+            secureTextEntry={true}
+            style={styles.inputField}
+            autoCapitalize = 'none'
+          />
+        </View>
+        {this.renderHelperText()}
+        <StyledButton 
+          title="Sign in" 
+          onPress={this.pingServer} 
+          buttonStyle={styles.ctaBtn}
+        />
+        <View style={styles.otherOption}>
+          <CustomText style={styles.otherOptionText}>Don't have an account?</CustomText>
+          <CustomText 
+            onPress={this.signUp}
+            style={styles.otherBtn}
+          >
+            Signup
+          </CustomText>
+        </View>
+      </ScrollView>
+    );
   }
 }
 

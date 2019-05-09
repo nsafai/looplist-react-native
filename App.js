@@ -11,6 +11,7 @@ import SignUpScreen from './Components/AuthScreens/SignUpScreen';
 import DetailScreen from './Components/AppScreens/ListDetailScreen';
 import { bgColor } from './Components/helpers/Colors';
 
+// the stack you'd see if you were logged in
 const AppStack = createStackNavigator({ 
   Home: HomeScreen, 
   Detail: DetailScreen,
@@ -19,6 +20,8 @@ const AppStack = createStackNavigator({
   headerMode: 'screen',
   cardStyle: { backgroundColor: bgColor },
 });
+
+// the stack you'd see if you're logged out
 const AuthStack = createStackNavigator({ 
   SignUp: SignUpScreen, 
   SignIn: SignInScreen 
@@ -28,6 +31,7 @@ const AuthStack = createStackNavigator({
   cardStyle: { backgroundColor: bgColor },
 });
 
+// the switch stack which determines if logged in, the shows one of above
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,

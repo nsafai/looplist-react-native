@@ -16,6 +16,8 @@ class AuthLoadingScreen extends React.Component {
   _bootstrapAsync = async () => {
     const userId = await AsyncStorage.getItem('userId');
 
+    // TODO: verify that token stored locally hasn't expired
+
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
     this.props.navigation.navigate(userId ? 'App' : 'Auth');

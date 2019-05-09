@@ -34,7 +34,7 @@ const getData = async (url = ``, data = {}) => {
 
 const LOCAL_URL = 'http://10.0.1.2:8080';
 const PROD_URL = 'https://loop-list.herokuapp.com';
-const SCHOOL_URL = 'http://172.30.6.164:19000';
-const HOST_URL = PROD_URL;
+const SCHOOL_URL = 'http://172.30.6.164:8080';
+const HOST_URL = SCHOOL_URL;
 
 export {postData, getData, HOST_URL };
