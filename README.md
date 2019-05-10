@@ -51,7 +51,7 @@ $ expo build:android
     - [x] allow user to toggle todo completion
     - [x] allow user to reset all todos
     
-    - [x] Stretch:
+    - [x] UI/UX Improvements / Stretch Goals:
       - [x] Use [socket.io instead](https://hackernoon.com/a-simple-messaging-app-with-react-native-and-socket-io-e1cae3df7bda)
       - [x] allow user to create new list
       - [x] allow user to delete list
@@ -63,6 +63,4 @@ $ expo build:android
       - [x] allow user to add todo between rows using enter key
       - [ ] allow user to remove todo using backspace key
       - [ ] add [keyboardavoidingview](https://medium.freecodecamp.org/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580) to gracefully scroll up screen on Login, Signup, Home and ListDetail
-
-Bug:
-  - [ ] figure out why password autofill not showing up on Login but is showing up on SignUp
+      - [ ] figure out why password autofill not showing up on Login but is showing up on SignUp
