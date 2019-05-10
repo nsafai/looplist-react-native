@@ -8,3 +8,4 @@ npm-debug.*
 *.mobileprovision
 .env
 loop-list_apns_key
+loop-list_apns_key.p8
