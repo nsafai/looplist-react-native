@@ -1,5 +1,5 @@
 # looplist-react-native
-A React Native client for http://www.looplist.xyz
+A React Native client for http://www.looplist.xyz, current in testing on Testflight and will be on the App Store shortly. Android thereafter. Links to follow.
 
 ## The Backend API
 The [backend](https://github.com/nsafai/looplist) uses Node.js, Express.js, and Socket.io routes with a MongoDB Database
