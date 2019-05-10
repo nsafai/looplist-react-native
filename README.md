@@ -58,4 +58,6 @@ $ expo build:android
       - [x] allow user to create new todo
       - [x] allow user to edit checklist title
       - [x] allow user to edit todo
-      - [ ] add [swipe to delete](https://medium.com/@bdougie/adding-swipe-to-delete-in-react-native-cfa85a5f5a31)
+      - [x] add [swipe to delete](https://medium.com/@bdougie/adding-swipe-to-delete-in-react-native-cfa85a5f5a31)
+      - [x] add auth error handling messages
+      - [x] add [keyboardavoidingview](https://medium.freecodecamp.org/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580) to gracefully scroll up screen on Login, Signup, Home and ListDetail
