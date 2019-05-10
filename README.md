@@ -32,7 +32,7 @@ $ expo build:android
 
 (Note: If you need to manage certificates [go here](https://developer.apple.com/account/ios/profile/)
 
-## To-do list:
+## Roadmap
 - [x] Implement routes
   - [x] If not logged in ([Switch Navigator](https://reactnavigation.org/docs/en/auth-flow.html))
     - [x] show `/login/` screen modal (which user can not dismiss)
@@ -60,4 +60,9 @@ $ expo build:android
       - [x] allow user to edit todo
       - [x] add [swipe to delete](https://medium.com/@bdougie/adding-swipe-to-delete-in-react-native-cfa85a5f5a31)
       - [x] add auth error handling messages
-      - [x] add [keyboardavoidingview](https://medium.freecodecamp.org/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580) to gracefully scroll up screen on Login, Signup, Home and ListDetail
+      - [x] allow user to add todo between rows using enter key
+      - [ ] allow user to remove todo using backspace key
+      - [ ] add [keyboardavoidingview](https://medium.freecodecamp.org/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580) to gracefully scroll up screen on Login, Signup, Home and ListDetail
+
+Bug:
+  - [ ] figure out why password autofill not showing up on Login but is showing up on SignUp
