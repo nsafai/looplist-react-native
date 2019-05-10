@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 import { CheckBox } from 'react-native-elements'
-import { green } from '../../helpers/Colors';
+import { green, red } from '../../helpers/Colors';
 import { findIndex } from 'lodash';
 import { HOST_URL } from '../../helpers/Requests';
 import SocketIOClient from 'socket.io-client';
@@ -92,8 +92,9 @@ const styles = StyleSheet.create({
   text:{
     paddingVertical: 25,
     fontSize: 16,
-    width: '100%',
-    justifyContent: 'center'
+    width: '72%',
+    marginRight: 12,
+    justifyContent: 'center',
   },
   checkbox: {
     marginLeft: 40,

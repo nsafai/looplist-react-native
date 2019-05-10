@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { Button as StyledButton } from 'react-native-elements';
 import { postData, HOST_URL } from '../helpers/Requests';
-import styles from './styles/FormStyles';
+import styles from './Styles/FormStyles';
 import CustomText from '../CustomText';
 import { placeholder } from '../helpers/Colors';
  

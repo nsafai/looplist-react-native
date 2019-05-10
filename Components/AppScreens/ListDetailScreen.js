@@ -13,7 +13,8 @@ import { Button } from 'react-native-elements';
 import Todo from './Components/Todo';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './Styles/ListDetailScreenStyles';
-import { grey } from '../helpers/Colors';
+import { grey, red } from '../helpers/Colors';
+import Swipeout from 'react-native-swipeout';
 
 class ListDetailScreen extends Component {
   navState = this.props.navigation.state;
@@ -72,6 +73,14 @@ class ListDetailScreen extends Component {
     })
   }
 
+  deleteTodo(todoId) {
+    console.log('hellloo')
+    this.socket.emit('delete-todo', todoId)
+    let { currentListTodos } = this.state;
+    currentListTodos = currentListTodos.filter((todo) => todo._id !== todoId);
+    this.setState({ currentListTodos });
+  }
+
   saveListName(newListName) {
     this.setState({ title: newListName })
     this.socket.emit('save-list-name', {
@@ -102,19 +111,30 @@ class ListDetailScreen extends Component {
 
   renderTodos() {
     const { currentListTodos } = this.state;
+
     if (currentListTodos === null) {
       return <ActivityIndicator size='large' />;
     } else {
       let todos = [];
       currentListTodos.forEach((todo) => {
         todos.push(
-          <Todo 
-            key={todo._id}
-            todoId={todo._id}
-            todoName={todo.name}
-            todoIndex={todo.index}
-            completed={todo.completed}
-          />
+          <Swipeout right={[{
+              text: 'Delete',
+              backgroundColor: red,
+              onPress: () => { this.deleteTodo(todo._id) }
+            }]}
+            autoClose={true}
+            backgroundColor='transparent'
+            key={`swipe-${todo._id}`}
+          >
+            <Todo 
+              key={todo._id}
+              todoId={todo._id}
+              todoName={todo.name}
+              todoIndex={todo.index}
+              completed={todo.completed}
+            />
+          </Swipeout>
         );
       });
       if (todos.length === 0) {
