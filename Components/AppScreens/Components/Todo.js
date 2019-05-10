@@ -52,7 +52,7 @@ class Todo extends Component {
   }
 
   render() {
-    const { todoId, onSubmitEditing } = this.props;
+    const { todoId, onSubmitEditing, autofocus } = this.props;
     const { completed } = this.state;
     
     return (
@@ -72,6 +72,7 @@ class Todo extends Component {
           onChangeText={(text) => this.saveTodo(text)}
           value={this.state.todoName}
           onSubmitEditing={onSubmitEditing}
+          autoFocus={autofocus}
         />
       </View>
     );

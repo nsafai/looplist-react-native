@@ -32,6 +32,7 @@ class ListDetailScreen extends Component {
   state = {
     title: '',
     currentListTodos: null,
+    newTodoIndex: null,
   }
 
   componentDidMount() {
@@ -69,17 +70,14 @@ class ListDetailScreen extends Component {
       }
       if (!currentListTodos.includes(newTodo)) {
         if (todoIndex === currentListTodos.length) {
-          // add to end of list
-          currentListTodos.push(newTodo);
+          currentListTodos.push(newTodo); // add to end of list
         } else {
-          // TODO: Make this more efficient, 2 x O(n) operation
-          // Insert item at given index
-          currentListTodos.splice(newTodo.index, 0, newTodo);
-          // remap current list's todo indexes
-          currentListTodos.forEach((todo, index) => todo.index = index)
+          /* TODO: Consider making this more efficient */
+          currentListTodos.splice(newTodo.index, 0, newTodo); // Insert item at given index
+          currentListTodos.forEach((todo, index) => todo.index = index) // remap current list's todo indexes
         }
       }
-      this.setState({ currentListTodos }); // Force re-render of todos
+      this.setState({ currentListTodos, newTodoIndex: newTodo.index }); // Force re-render of todos
     })
   }
 
@@ -120,13 +118,17 @@ class ListDetailScreen extends Component {
   }
 
   renderTodos() {
-    const { currentListTodos } = this.state;
+    const { currentListTodos, newTodoIndex } = this.state;
 
     if (currentListTodos === null) {
       return <ActivityIndicator size='large' />;
     } else {
       let todos = [];
-      currentListTodos.forEach((todo) => {
+      let autofocus = false;
+      currentListTodos.forEach((todo, index) => {
+        if (index === newTodoIndex) {
+          autofocus = true;
+        }
         todos.push(
           <Swipeout right={[{
               text: 'Delete',
@@ -139,6 +141,7 @@ class ListDetailScreen extends Component {
           >
             <Todo 
               key={todo._id}
+              autofocus={autofocus}
               todoId={todo._id}
               todoName={todo.name}
               todoIndex={todo.index}
@@ -162,14 +165,12 @@ class ListDetailScreen extends Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.titleAndBtn}>
-          {/* <CustomText style={styles.title}>{this.title}</CustomText> */}
           <TextInput
             style={styles.title}
             onChangeText={(text) => this.saveListName(text)}
             value={this.state.title}
             multiline
           />
-          {/* saveListName(newListName) */}
           <Button 
             title="Reset All" 
             onPress={() => this.resetTodos()}
