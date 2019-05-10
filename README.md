@@ -18,8 +18,8 @@ The [backend](https://github.com/nsafai/looplist) uses Node.js, Express.js, and 
 (2)
 Run
 ```
-$ exp build:ios  // or
-$ exp build:android
+$ expo build:ios  // or
+$ expo build:android
 ```
 
 (3) Click links provided when (2) completes and download the build(s)
