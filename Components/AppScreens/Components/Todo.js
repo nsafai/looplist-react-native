@@ -52,7 +52,7 @@ class Todo extends Component {
   }
 
   render() {
-    const { todoId } = this.props;
+    const { todoId, onSubmitEditing } = this.props;
     const { completed } = this.state;
     
     return (
@@ -71,6 +71,7 @@ class Todo extends Component {
           style={styles.text}
           onChangeText={(text) => this.saveTodo(text)}
           value={this.state.todoName}
+          onSubmitEditing={onSubmitEditing}
         />
       </View>
     );

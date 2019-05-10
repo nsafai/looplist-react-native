@@ -56,20 +56,30 @@ class ListDetailScreen extends Component {
     this.props.navigation.goBack();
   }
 
-  addTodo() {
+  addTodo(todoIndex) {
     let { currentListTodos } = this.state;
+    console.log(todoIndex);
     this.socket.emit('create-todo', { 
       currentListId: this.id, 
-      todoIndex: currentListTodos.length, // add to bottom
+      todoIndex,
     });
     this.socket.on('create-todo', (newTodo) => {
       if (currentListTodos === null) {
         currentListTodos = [];
       }
       if (!currentListTodos.includes(newTodo)) {
-        currentListTodos.push(newTodo);
-        this.setState({ currentListTodos }); // Force re-render of todos
+        if (todoIndex === currentListTodos.length) {
+          // add to end of list
+          currentListTodos.push(newTodo);
+        } else {
+          // TODO: Make this more efficient, 2 x O(n) operation
+          // Insert item at given index
+          currentListTodos.splice(newTodo.index, 0, newTodo);
+          // remap current list's todo indexes
+          currentListTodos.forEach((todo, index) => todo.index = index)
+        }
       }
+      this.setState({ currentListTodos }); // Force re-render of todos
     })
   }
 
@@ -133,6 +143,7 @@ class ListDetailScreen extends Component {
               todoName={todo.name}
               todoIndex={todo.index}
               completed={todo.completed}
+              onSubmitEditing={() => this.addTodo(todo.index + 1)}
             />
           </Swipeout>
         );
@@ -146,6 +157,8 @@ class ListDetailScreen extends Component {
   }
   
   render() {
+    const { currentListTodos } = this.state;
+
     return (
       <ScrollView style={styles.container}>
         <View style={styles.titleAndBtn}>
@@ -165,10 +178,16 @@ class ListDetailScreen extends Component {
         </View>
         {this.renderTodos()}
         <View style={styles.addItemBtnContainer}>
-          <Icon name="ios-add" size={30} color={grey} style={styles.plusIcon} onPress={() => this.addTodo()} />
+          <Icon 
+            name="ios-add" 
+            size={30} 
+            color={grey} 
+            style={styles.plusIcon} 
+            onPress={() => this.addTodo(currentListTodos.length)} 
+          />
           <CustomText 
             style={styles.addItemBtn}
-            onPress={() => this.addTodo()}
+            onPress={() => this.addTodo(currentListTodos.length)}
           >
             Add item
           </CustomText>
