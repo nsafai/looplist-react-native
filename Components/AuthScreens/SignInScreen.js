@@ -69,7 +69,6 @@ class SignInScreen extends React.Component {
 
     postData(url, { email, password })
       .then(res => {
-        console.log(res);
         if(res.status >= 200 && res.status < 300) {
           return res.json();
         } else {
@@ -97,7 +96,6 @@ class SignInScreen extends React.Component {
 
   render() {
     const { placeholderEmail, placeholderPassword } = this;
-    console.log(placeholderEmail);
     return (
       <ScrollView 
         keyboardShouldPersistTaps='handled'

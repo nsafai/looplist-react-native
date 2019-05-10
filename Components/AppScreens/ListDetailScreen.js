@@ -59,7 +59,6 @@ class ListDetailScreen extends Component {
 
   addTodo(todoIndex) {
     let { currentListTodos } = this.state;
-    console.log(todoIndex);
     this.socket.emit('create-todo', { 
       currentListId: this.id, 
       todoIndex,
@@ -82,7 +81,6 @@ class ListDetailScreen extends Component {
   }
 
   deleteTodo(todoId) {
-    console.log('hellloo')
     this.socket.emit('delete-todo', todoId)
     let { currentListTodos } = this.state;
     currentListTodos = currentListTodos.filter((todo) => todo._id !== todoId);
